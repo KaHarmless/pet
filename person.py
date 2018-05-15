@@ -53,8 +53,8 @@ class person(object):
 		# 	return
 		self.ifRad = True                       # if elder - make a radiation flag true
 		if self.age < 60 and self.age > 20:
-			# newDose = 6.23 + self.dose[-1]	# add a dose
-			newDose = 4.8 + self.dose[-1]	# add a dose
+			#newDose = 6.23 + self.dose[-1]	# add a dose
+			 newDose = 3.7 + self.dose[-1]	# add a dose 
 		else: 
 			newDose = self.dose[-1]
 		
@@ -95,7 +95,7 @@ class person(object):
 		
 		# for i in xrange(0,1):        # loop for all cancers
 		dice = random.random()   # get random value
-		if dice < self.ear[1]:   # check if it passes
+		if dice < self.ear[0]:   # check if it passes
 			self.makeCancer(0)   # male a cancer to him if he sould have one
 
 
@@ -107,26 +107,25 @@ class person(object):
 			eStar = 0
 		else:
 			eStar = (self.age - L - 30)/10    # e star from formula
-
 		# for i in xrange(0,5):    # calculate ear for each type of cancer
-		i = 1
+		i = 0
 		self.ear[i] =  self.info.getBetaS(self.sex, i) * self.dose[self.age - L -1] * math.exp(self.info.getGamma(i) * eStar) * ( ((self.age - L - 0.5)/60)**self.info.getEta(i) )/10**4
 		
 
-	# def generateEAR(self):
-	# 	# if self.age < 20:
-	# 	# 	ear1 = 0
-	# 	if self.age < 30:
-	# 		ear1 = self.dose[-5]*10**(-3)*40./10**4
-	# 	if self.age < 45:
-	# 		ear1 = self.dose[-5]*10**(-3)*23./10**4
-	# 	if self.age < 60:
-	# 		ear1 = self.dose[-5]*10**(-3)*20./10**4
-	# 	else:
-	# 		ear1 = self.dose[-5]*10**(-3)*67./10**4
-	# 		# ear1 = 0
-	# 	for i in xrange(0,5):
-	# 		self.ear[i] = ear1
+	#def generateEAR(self):
+	#	# if self.age < 20:
+	#	# 	ear1 = 0
+	#	if self.age < 30:
+	#		ear1 = self.dose[-5]*10**(-3)*40./10**4
+	#	if self.age < 45:
+	#		ear1 = self.dose[-5]*10**(-3)*23./10**4
+	#	if self.age < 60:
+	#		ear1 = self.dose[-5]*10**(-3)*20./10**4
+	#	else:
+	#		ear1 = self.dose[-5]*10**(-3)*67./10**4
+	#		# ear1 = 0
+	#	for i in xrange(0,5):
+	#		self.ear[i] = ear1
 
 
 	def makeCancer(self, i):      # make a cancer

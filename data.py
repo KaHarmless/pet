@@ -1,7 +1,7 @@
 import random as rnd
 
 class data(object):
-	# lungs, colon, prostate, liver, bladder
+	# lungs, colon,prostate,liver, bladder
 	betam = [2.3, 3.2, 0.11, 2.2, 1.2]
 	# betam = [2.3, 0, 0, 0, 0]
 	# betam = [2.3, 1., 0.11, 2.2, 1.2]       # beta for males
