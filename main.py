@@ -30,9 +30,9 @@ for i in ageSick:
 
 nHealthy = 0
 
+expDur = 500 #########################
 
-
-x = xrange(0,500)
+x = xrange(0,expDur)
 y = []
 # for i in x:
 	# y.append(0)
@@ -40,7 +40,7 @@ y = []
 # main loop
 
 # while len(people) != 0:
-for j in xrange(0,500):
+for j in xrange(0,expDur):
 	time.append(j)
 	# nSickArr.append(0)
 	nSick = 0
@@ -62,11 +62,12 @@ for j in xrange(0,500):
 	peopleNew = []
 	###############################################################################
 	for i in people:             # loop for each person every year
-		if i.age >= 100:
+		if i.age >= 78:
 			# print "YOU DIED"
-			nHealthy += 1
+			# nHealthy += 1
 			# i.info.probDeath = 30.
-			continue
+			# continue
+			i.info.probDeath = 66.
 
 		# print people.index(i),i.age
 
