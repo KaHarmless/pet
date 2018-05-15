@@ -54,7 +54,7 @@ class person(object):
 		self.ifRad = True                       # if elder - make a radiation flag true
 		if self.age < 60 and self.age > 20:
 			# newDose = 6.23 + self.dose[-1]	# add a dose
-			newDose = 59.2 + self.dose[-1]	# add a dose
+			newDose = 4.8 + self.dose[-1]	# add a dose
 		else: 
 			newDose = self.dose[-1]
 		
@@ -95,7 +95,7 @@ class person(object):
 		
 		# for i in xrange(0,1):        # loop for all cancers
 		dice = random.random()   # get random value
-		if dice < self.ear[4]:   # check if it passes
+		if dice < self.ear[1]:   # check if it passes
 			self.makeCancer(0)   # male a cancer to him if he sould have one
 
 
@@ -109,7 +109,7 @@ class person(object):
 			eStar = (self.age - L - 30)/10    # e star from formula
 
 		# for i in xrange(0,5):    # calculate ear for each type of cancer
-		i = 4
+		i = 1
 		self.ear[i] =  self.info.getBetaS(self.sex, i) * self.dose[self.age - L -1] * math.exp(self.info.getGamma(i) * eStar) * ( ((self.age - L - 0.5)/60)**self.info.getEta(i) )/10**4
 		
 

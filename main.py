@@ -32,7 +32,7 @@ nHealthy = 0
 
 
 
-x = xrange(0,200)
+x = xrange(0,500)
 y = []
 # for i in x:
 	# y.append(0)
@@ -40,7 +40,7 @@ y = []
 # main loop
 
 # while len(people) != 0:
-for j in xrange(0,200):
+for j in xrange(0,500):
 	time.append(j)
 	# nSickArr.append(0)
 	nSick = 0
