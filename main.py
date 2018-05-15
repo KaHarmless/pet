@@ -12,7 +12,7 @@ import copy as cp
 
 # people
 
-nPeople = 10**6
+nPeople = 10**5
 people = [ person.person() for i in range(0,nPeople)]  #initial group of people
 
 ageSick = range(0,101)
@@ -99,7 +99,7 @@ for j in xrange(0,200):
 
 		peopleNew.append(i)
 		i.increaseAge()          # increase age of person
-		##########################################################################################
+	##########################################################################################
 	# print temp
 	
 	# y[j] = temp
