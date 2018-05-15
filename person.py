@@ -109,7 +109,7 @@ class person(object):
 			eStar = (self.age - L - 30)/10    # e star from formula
 		# for i in xrange(0,5):    # calculate ear for each type of cancer
 		i = 0
-		self.ear[i] =  self.info.getBetaS(self.sex, i) * self.dose[self.age - L -1] * math.exp(self.info.getGamma(i) * eStar) * ( ((self.age - L - 0.5)/60)**self.info.getEta(i) )/10**4
+		self.ear[i] =  self.info.getBetaS(self.sex, i) * self.dose[self.age - L -1] * math.exp(self.info.getGamma(i) * eStar) * ( ((self.age - L - 0.5)/60)**self.info.getEta(i) )/10**7
 		
 
 	#def generateEAR(self):
