@@ -1,166 +1,168 @@
 import person
 import data
-import matplotlib.pyplot as mpl
+import matplotlib.pyplot as pl
 import random as rnd
 import copy as cp
 
 
-# histogramming
-
-# for i in age:
-# 	nSick.append(0)
-
 # people
 
-nPeople = 10**5
-people = [ person.person() for i in range(0,nPeople)]  #initial group of people
+info = data.data(0) # baseline flag: 0 - only background, 1 - only PET, 2 - sum
+############################## temp
 
-ageSick = range(0,101)
 
-time = []
-nSickArr = []
 
-nSickAge = []
+nPeople = 10**6        ####################
+expDur = 200           ####################
 
-NN = []
 
-for i in ageSick:
-	nSickAge.append(0.)
-	NN.append(0.)
 
-nHealthy = 0
 
-expDur = 500 #########################
+############################ initial cohort ##############
+people = []
+for i in range(0,nPeople):
+	newPerson = person.person()
+	newPerson.info = info
+	newPerson.probDeath = info.getProbDeath(newPerson.age)
+	# newPerson.age = person.ageDistribution()
+	newPerson.index = 1
+	# newPerson.startAge = person.ageDistribution()
+	people.append(cp.copy(newPerson))  #initial group of people
 
-x = xrange(0,expDur)
-y = []
-# for i in x:
-	# y.append(0)
+print ">>> Initial cohort is ready"
 
-# main loop
+##########################################################
 
-# while len(people) != 0:
-for j in xrange(0,expDur):
-	time.append(j)
-	# nSickArr.append(0)
-	nSick = 0
+
+
+
+x = xrange(0,expDur+1)
+
+# x = xrange(1, 120)
+
+
+y = [[0 for i in x] for j in xrange(0,info.nCancers+1)]
+N = [0 for i in x]
+
+# z = [[0 for i in x] for j in xrange(0,6)]
+# nz = [0 for j in xrange(0,6)]
+
+
+################ main loop by years of experiment ###############
+
+for j in xrange(1,expDur + 1):
+
 	nFolk = len(people)
 
-	avAge = 0
-	# print j
+	# N[j-1] = nFolk
 
-	# x.append(j)
-	# y.append(len(people))
-
-	if j%10 == 0:
-		print ">>>",j
-
-	temp = 0.
+	if j%20 == 0 and j != 0:
+		print ">>>", j
 
 
-
-	peopleNew = []
+	
 	###############################################################################
+	peopleNew = []
+
 	for i in people:             # loop for each person every year
-		if i.age >= 78:
-			# print "YOU DIED"
-			# nHealthy += 1
-			# i.info.probDeath = 30.
-			# continue
-			i.info.probDeath = 66.
-
-		# print people.index(i),i.age
-
-		for j in xrange(0,len(i.cancers)):
-			# print i.ageGetCancer[j]
-			if (i.age - i.ageGetCancer[j]) == 1:
-				temp += 1.
+		if i.age > 140:
+			print "I'm lucky man! My age is", i.age, "years!\n I was born in", i.startAge, "!"
+		# if i.age >= 96:
+			# probDeath
+			
+		for k in xrange(0,len(i.cancers)):
+			if (i.age - i.cancers[k].startAge) == 1:
+				y[i.cancers[k].cancerType][j] += 1.
+				# pass
 
 
-
-		avAge += i.age
-
-		# if len(i.cancers) != 0 and j > 100:
-		# 	nSick += 1
-		# 	nSickAge[i.age]+=1
-		# 	continue
-
-		# if j == 400:
-			# print  people.index(i),i.age
-
-
-		# if i.toDie:
-		# 	people.pop(people.index(i))
-		# 	continue
-		
-		if i.info.ifDie(i):      # getting probabiluty to die and check
-			# print i.age
-			# NN[i.age] += 1
+		if info.ifDie(i):      # getting probabiluty to die and check
 			continue                    # go to the next person
 
 		peopleNew.append(i)
 		i.increaseAge()          # increase age of person
-	##########################################################################################
-	# print temp
-	
-	# y[j] = temp
-
-	y.append(temp/len(people))
-
+		
 	people = peopleNew
+	##########################################################################################
+	
 
-	nSickArr.append(100.*nSick/nFolk)
-	avAge /= nFolk
-	NN[int(avAge)] += 1
+	for k in xrange(1, 6):
+		y[6][j] += y[k][j]
 
-	sick = 0.
-	if j == 102:
-		for i in people:
-			# y[i.age]+=1
-			# for j in xrange(0,len(i.cancers)):
-				# y[i.ageGetCancer[j]] += 1
-			if len(i.cancers) != 0:
-				sick += 1.
-		print "number of people:", len(people)
-		print "number of sick:", sick / len(people)
+	for i in y:
+			i[j] /= nFolk 
+			i[j] *= 10000.
 
 
-
+	# for k in y:
+	# 	k[j] /= nFolk
 
 	if len(people) < 1 :
 		nFolk = 0
 		break
 	
 
-	for j in xrange(0, people[0].info.genBirth(len(people))):  # do the loop as much times as a number of people to born
+	# for j in xrange(0, people[0].info.genBirth(len(people))):  # do the loop as much times as a number of people to born
+	for k in xrange(0, info.genBirth(len(people))):
 		tempPer = person.person()           # create new temporary person
 		tempPer.age = 1                     # set his age to 0 
-		tempPer.startAge = 1                # and starting age too
+		tempPer.startAge = j                 # and starting age too
+		tempPer.probDeath = info.getProbDeath(tempPer.age)
+
+		tempPer.info = info ################## temp
+
 		people.append(cp.copy(tempPer))              # add out temporary man to the list
-		nPeople +=1
+
+#####################################################################
+
+# for j in x: #xrange(0,len(x)):
+# 	# for k in xrange(0, len(norm)):
+# 	norm[0] += y[0][j]
+# 	norm[6] += y[6][j]
+
+# for j in x:#xrange(0,len(x)):
+# 	y[0][j] /= norm[0]
+# 	y[6][j] /= norm[6]
+
+# for i in xrange(0,3):
+# 	for j in z[i]:
+# 		j /= nz[i]
 
 
-	###################################
-
-
-
-# print 100. - nHealthy*100./len(people)
-
-
-# mpl.plot(time,nSickArr)
-# mpl.plot(ageSick,nSickAge)
-# x = ageSick
-# y = NN
-# y = nSickAge
 
 
 plotOutput = open("data.csv","w")
+plotOutput.write("age,all(danger),lungs,colon,stomach,liver,bladder\n")
 for i in xrange(0,len(x)):
-	plotOutput.write(str(x[i])+","+str(y[i])+"\n")
+	# msg = str(x[i])+','
+	# for j in xrange(1, len(y)-1):
+		# msg += str(y[j][i]) + ','
+	# msg += '\n'
+	plotOutput.write(str(x[i])+','+str(y[0][i])+','+str(y[1][i])+','+str(y[2][i])+','+str(y[3][i])+','+str(y[4][i])+','+str(y[5][i])+'\n')
 plotOutput.close()
 
+# pl0 = pl.plot(x,y[0], color = "red", label = "All cancers")
+pl1 = pl.plot(x,y[1], color = "green", label = "Lungs cancer")
+pl2 = pl.plot(x,y[2], color = "blue", label = "Colon cancer")
+pl3 = pl.plot(x,y[3], color = "cyan", label = "Stomach cancer")
+pl4 = pl.plot(x,y[4], color = "magenta", label = "Liver cancer")
+pl5 = pl.plot(x,y[5], color = "brown", label = "Bladder cancer")
+pl6 = pl.plot(x,y[6], color = "black", label = "Summ of solid cancers")
 
-mpl.plot(x,y)
-mpl.show()
+# pl0 = pl.plot(x,z[0], color = "red", label = "110th year")
+# pl1 = pl.plot(x,z[1], color = "green", label = "200th year")
+# pl2 = pl.plot(x,z[2], color = "blue", label = "300th year")
 
 
+# pl.plot(x,N)
+
+# allSolid = pl.plot(x,y[0], color = "red", label = "All solid cancers")
+# sumSolid = pl.plot(x,y[6], color = "blue", label = "Summ of 5 cancers")
+
+# allSolid = pl.plot(x,y[0], color = "red", label = "All solid cancers")
+# sumSolid = pl.plot(x,y[6], color = "blue",label = "Summ of 5 cancers")
+
+
+
+pl.legend()
+pl.show()
