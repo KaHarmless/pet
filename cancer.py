@@ -18,14 +18,17 @@ class cancer(object):
 		if self.age - self.startAge == 4:
 			stage = 4
 			return True
+		return True
 
 
 
 
 	def __init__(self, i, start):
-		self.age = -999
+		self.age = 0
 		self.cancerType = i
 		self.startAge = start
+
+		self.cancerName = ""
 		self.stage = 0
 		self.isFound = 0
 		self.ageFound = 0
