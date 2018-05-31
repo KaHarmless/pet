@@ -18,11 +18,11 @@ class cancer(object):
 
 		self.isCured = False
 		
+		self.probablyDead = False
 		
 
 	def grow(self):
-		probFindArray = self.info[self.cancerType]
+		# probFindArray = self.info[self.cancerType]
 		self.stage += 1
-		self.age += 1
 
 
