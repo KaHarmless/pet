@@ -19,8 +19,6 @@ class person(object):
 
 		self.cancers = []
 
-		self.probDeath = 0
-
 		self.age = self.generateAge()    # generate age
 		self.startAge = self.age         # save initial age
 
@@ -44,29 +42,21 @@ class person(object):
 
 	def increaseAge(self): #################################
 		self.age += 1                           # increment age
-		self.isGettingCancer() 
-		# if self.age < 20:                       # if younger then 20 - has no radiation
-		# 	self.ifRad = False
-		# else:
-		# 	self.ifRad = True
-		                 # check if he's getting cancer this year
-		
+		self.diagnosis()						# try to detect 
+		for i in self.cancers:                  # update tumors
+			i.ownerAge = self.age
+			i.grow()
+		self.isGettingCancer()                  # check for new cancer
 
-		# growRes = False
-		# for i in self.cancers:
-		# 	i.age = self.age
-		# 	growRes = i.grow()
 
-		# self.toDie = growRes
 
 	def diagnosis(self):
-		dice = random.random()
 		for i in self.cancers:
-			if dice < i.probFind:
+			dice = random.random()
+			if dice < self.info.probFind[i.cancerType][i.stage]:
 				i.isFound = True
 				i.ageFound = self.age
-				return True
-		return False
+
 
 
 
@@ -126,6 +116,7 @@ class person(object):
 	def makeCancer(self, i):      # make a cancer
 		newCancer = cancer.cancer(i,self.age)
 		newCancer.cancerName = self.info.cancerName[i]
+		newCancer.info = cp.copy(self.info)
 		self.cancers.append(cp.copy(newCancer))
 		self.ageGetCancer.append(self.age)
 
