@@ -93,32 +93,32 @@ class person(object):
 
 ################### Generating probabilities of getting cancer #################
 
-	def generateEAR(self, doseVal, age, aae): # dose, attained age, age at exposure
-		ear = []
-		if aae < 30:   
-			eStar = 0
-		else:
-			eStar = (aae - self.info.L - 30)/10    
-		for iCan in xrange(0,self.info.nCancers):
-			if age < 20:
-				ear.append(0)
-			else:	
-				exponent = math.exp(self.info.getGamma(iCan) * eStar)
-				attainedGuy = ( (age - self.info.L)/60. )**self.info.getEta(iCan)
-				ear.append( self.info.getBetaS(self.sex, iCan) * doseVal[iCan] * exponent * attainedGuy /10**7 )
-		return ear
+	# def generateEAR(self, doseVal, age, aae): # dose, attained age, age at exposure
+	# 	ear = []
+	# 	if aae < 30:   
+	# 		eStar = 0
+	# 	else:
+	# 		eStar = (aae - self.info.L - 30)/10    
+	# 	for iCan in xrange(0,self.info.nCancers):
+	# 		if age < 20:
+	# 			ear.append(0)
+	# 		else:	
+	# 			exponent = math.exp(self.info.getGamma(iCan) * eStar)
+	# 			attainedGuy = ( (age - self.info.L)/60. )**self.info.getEta(iCan)
+	# 			ear.append( self.info.getBetaS(self.sex, iCan) * doseVal[iCan] * exponent * attainedGuy /10**7 )
+	# 	return ear
 			
-	def generateProb(self):
-		tempProb = [0 for i in xrange(0, self.info.nCancers)]
-		for ageAtExposure in xrange(0, self.age):
-			currEAR = self.generateEAR(self.info.petDose, self.age, ageAtExposure)
-			for canType in xrange(0, self.info.nCancers):
-				tempProb[canType] += currEAR[canType]
-		self.cancerProb = tempProb
-		for i in xrange(0, self.info.nCancers):
-			if tempProb[0] > 1:
-				print "---> Danger! Probability of getting cancer is more then 1!"
-		return
+	# def generateProb(self):
+	# 	tempProb = [0 for i in xrange(0, self.info.nCancers)]
+	# 	for ageAtExposure in xrange(0, self.age):
+	# 		currEAR = self.generateEAR(self.info.petDose, self.age, ageAtExposure)
+	# 		for canType in xrange(0, self.info.nCancers):
+	# 			tempProb[canType] += currEAR[canType]
+	# 	self.cancerProb = tempProb
+	# 	for i in xrange(0, self.info.nCancers):
+	# 		if tempProb[0] > 1:
+	# 			print "---> Danger! Probability of getting cancer is more then 1!"
+	# 	return
 
 ################################################################################
 
@@ -131,16 +131,16 @@ class person(object):
 
 
 
-def ageDistribution():  # generating age of person due to distribution
-	dice = random.random();
-	return 20
-	if dice < 0.1873 :
-		return int(0 + random.random()*14)
-	if dice < 0.32 :
-		return int(15 + random.random()*9)
-	if dice < 0.7145 :
-		return int(25 + random.random()*29)
-	if dice < 0.8436 :
-		return int(55 + random.random()*9)
-	else:
-		return int(65 + random.random()*15)
+# def ageDistribution():  # generating age of person due to distribution
+# 	dice = random.random();
+# 	return 20
+# 	if dice < 0.1873 :
+# 		return int(0 + random.random()*14)
+# 	if dice < 0.32 :
+# 		return int(15 + random.random()*9)
+# 	if dice < 0.7145 :
+# 		return int(25 + random.random()*29)
+# 	if dice < 0.8436 :
+# 		return int(55 + random.random()*9)
+# 	else:
+# 		return int(65 + random.random()*15)

@@ -12,8 +12,8 @@ info = data.data(0) # baseline flag: 0 - only background, 1 - only PET, 2 - sum
 
 
 
-nPeople = 10**6        ####################
-expDur = 200           ####################
+nPeople = 10**4        ####################
+expDur = 300           ####################
 
 
 
@@ -54,7 +54,7 @@ for j in xrange(1,expDur + 1):
 
 	nFolk = len(people)
 
-	# N[j-1] = nFolk
+	N[j-1] = nFolk
 
 	if j%20 == 0 and j != 0:
 		print ">>>", j
@@ -79,8 +79,9 @@ for j in xrange(1,expDur + 1):
 		if info.ifDie(i):      # getting probabiluty to die and check
 			continue                    # go to the next person
 
-		peopleNew.append(i)
+		
 		i.increaseAge()          # increase age of person
+		peopleNew.append(i)
 		
 	people = peopleNew
 	##########################################################################################
@@ -103,7 +104,7 @@ for j in xrange(1,expDur + 1):
 	
 
 	# for j in xrange(0, people[0].info.genBirth(len(people))):  # do the loop as much times as a number of people to born
-	for k in xrange(0, info.genBirth(len(people))):
+	for k in xrange(0, info.genBirth(nFolk)):
 		tempPer = person.person()           # create new temporary person
 		tempPer.age = 1                     # set his age to 0 
 		tempPer.startAge = j                 # and starting age too
@@ -131,30 +132,30 @@ for j in xrange(1,expDur + 1):
 
 
 
-plotOutput = open("data.csv","w")
-plotOutput.write("age,all(danger),lungs,colon,stomach,liver,bladder\n")
-for i in xrange(0,len(x)):
-	# msg = str(x[i])+','
-	# for j in xrange(1, len(y)-1):
-		# msg += str(y[j][i]) + ','
-	# msg += '\n'
-	plotOutput.write(str(x[i])+','+str(y[0][i])+','+str(y[1][i])+','+str(y[2][i])+','+str(y[3][i])+','+str(y[4][i])+','+str(y[5][i])+'\n')
-plotOutput.close()
+# plotOutput = open("data.csv","w")
+# plotOutput.write("age,all(danger),lungs,colon,stomach,liver,bladder\n")
+# for i in xrange(0,len(x)):
+# 	# msg = str(x[i])+','
+# 	# for j in xrange(1, len(y)-1):
+# 		# msg += str(y[j][i]) + ','
+# 	# msg += '\n'
+# 	plotOutput.write(str(x[i])+','+str(y[0][i])+','+str(y[1][i])+','+str(y[2][i])+','+str(y[3][i])+','+str(y[4][i])+','+str(y[5][i])+'\n')
+# plotOutput.close()
 
-# pl0 = pl.plot(x,y[0], color = "red", label = "All cancers")
-pl1 = pl.plot(x,y[1], color = "green", label = "Lungs cancer")
-pl2 = pl.plot(x,y[2], color = "blue", label = "Colon cancer")
-pl3 = pl.plot(x,y[3], color = "cyan", label = "Stomach cancer")
-pl4 = pl.plot(x,y[4], color = "magenta", label = "Liver cancer")
-pl5 = pl.plot(x,y[5], color = "brown", label = "Bladder cancer")
-pl6 = pl.plot(x,y[6], color = "black", label = "Summ of solid cancers")
+# # pl0 = pl.plot(x,y[0], color = "red", label = "All cancers")
+# pl1 = pl.plot(x,y[1], color = "green", label = "Lungs cancer")
+# pl2 = pl.plot(x,y[2], color = "blue", label = "Colon cancer")
+# pl3 = pl.plot(x,y[3], color = "cyan", label = "Stomach cancer")
+# pl4 = pl.plot(x,y[4], color = "magenta", label = "Liver cancer")
+# pl5 = pl.plot(x,y[5], color = "brown", label = "Bladder cancer")
+# pl6 = pl.plot(x,y[6], color = "black", label = "Summ of solid cancers")
 
 # pl0 = pl.plot(x,z[0], color = "red", label = "110th year")
 # pl1 = pl.plot(x,z[1], color = "green", label = "200th year")
 # pl2 = pl.plot(x,z[2], color = "blue", label = "300th year")
 
 
-# pl.plot(x,N)
+pl.plot(x,N)
 
 # allSolid = pl.plot(x,y[0], color = "red", label = "All solid cancers")
 # sumSolid = pl.plot(x,y[6], color = "blue", label = "Summ of 5 cancers")
