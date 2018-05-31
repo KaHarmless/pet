@@ -64,6 +64,11 @@ class data(object):
 	def getProbDeathCancer(self,i):
 		return self.probDeathCancer[i]
 
+
+
+
+
+
 	def __init__(self, baselineFlag): # baseline flag: 0 - only background, 1 - only PET, 2 - sum
 
 		self.ifBckg = baselineFlag
@@ -115,19 +120,17 @@ class data(object):
 			else:	
 				exponent = math.exp(self.getGamma(iCan) * eStar)
 				attainedGuy = ( (age - self.L)/60. )**self.getEta(iCan)
-				if self.ifBckg != 0:
-					ear.append( self.getBetaS(0, iCan) * doseVal[iCan] * exponent * attainedGuy /10**7 )
-				else:
-					ear.append(0)
+				# if self.ifBckg != 0:
+					# ear.append( self.getBetaS(0, iCan) * doseVal[iCan] * exponent * attainedGuy /10**7 )
+				# else:
+				ear.append(0.)
 		return ear
 
 
 	def generateProbs(self):
 		for age in xrange(1, 97):
-			currentProb = [0 for i in xrange(0, self.nCancers)]
-			if self.ifBckg != 1:
-				for i in xrange(0, self.nCancers):
-					currentProb[i] += self.baselineRisk[i][age-1]
+			currentProb = [self.baselineRisk[i][age-1] for i in xrange(0, self.nCancers)]
+			# currentProb = [0 for i in xrange(0, self.nCancers)]
 
 			if age < 25:
 				self.canProbs[age] = currentProb
@@ -160,8 +163,8 @@ class data(object):
 				words = k.split(',')
 				if words[0] == 'age':
 					continue
-				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) * float(words[3]) / float(words[4])
-				if canId == 1:
+				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) * float(words[3])
+				if canId == 0:
 					self.probDeath[int(words[0]) -1] = float(words[1])*1000.
 				words = []
 		return
