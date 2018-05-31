@@ -1,19 +1,20 @@
+#!/usr/bin/python
+
 import person
 import data
 import matplotlib.pyplot as pl
 import random as rnd
 import copy as cp
 
-
 # people
 
-info = data.data(0) # baseline flag: 0 - only background, 1 - only PET, 2 - sum
+info = data.data(0) # baseline flag: 0 - only background, 1 - all together
 ############################## temp
 
 
 
 nPeople = 10**4        ####################
-expDur = 300           ####################
+expDur = 200           ####################
 
 
 
@@ -95,9 +96,6 @@ for j in xrange(1,expDur + 1):
 			i[j] *= 10000.
 
 
-	# for k in y:
-	# 	k[j] /= nFolk
-
 	if len(people) < 1 :
 		nFolk = 0
 		break
@@ -118,14 +116,14 @@ for j in xrange(1,expDur + 1):
 
 # for j in x: #xrange(0,len(x)):
 # 	# for k in xrange(0, len(norm)):
-# 	norm[0] += y[0][j]
-# 	norm[6] += y[6][j]
+# 	for i in xrange(1,7):
+# 		norm[i] += y[i][j]
 
 # for j in x:#xrange(0,len(x)):
-# 	y[0][j] /= norm[0]
-# 	y[6][j] /= norm[6]
+# 	for i in xrange(1,7):
+# 		y[i][j] / norm[i]
 
-# for i in xrange(0,3):
+# # for i in xrange(0,3):
 # 	for j in z[i]:
 # 		j /= nz[i]
 
@@ -143,25 +141,26 @@ for j in xrange(1,expDur + 1):
 # plotOutput.close()
 
 # # pl0 = pl.plot(x,y[0], color = "red", label = "All cancers")
-# pl1 = pl.plot(x,y[1], color = "green", label = "Lungs cancer")
-# pl2 = pl.plot(x,y[2], color = "blue", label = "Colon cancer")
-# pl3 = pl.plot(x,y[3], color = "cyan", label = "Stomach cancer")
-# pl4 = pl.plot(x,y[4], color = "magenta", label = "Liver cancer")
-# pl5 = pl.plot(x,y[5], color = "brown", label = "Bladder cancer")
-# pl6 = pl.plot(x,y[6], color = "black", label = "Summ of solid cancers")
+pl1 = pl.plot(x,y[1], color = "green", label = "Lungs cancer")
+pl2 = pl.plot(x,y[2], color = "blue", label = "Colon cancer")
+pl3 = pl.plot(x,y[3], color = "cyan", label = "Stomach cancer")
+pl4 = pl.plot(x,y[4], color = "magenta", label = "Liver cancer")
+pl5 = pl.plot(x,y[5], color = "brown", label = "Bladder cancer")
+pl6 = pl.plot(x,y[6], color = "black", label = "Summ of solid cancers")
 
 # pl0 = pl.plot(x,z[0], color = "red", label = "110th year")
 # pl1 = pl.plot(x,z[1], color = "green", label = "200th year")
 # pl2 = pl.plot(x,z[2], color = "blue", label = "300th year")
 
 
-pl.plot(x,N)
+# pl.plot(x,N)
 
 # allSolid = pl.plot(x,y[0], color = "red", label = "All solid cancers")
 # sumSolid = pl.plot(x,y[6], color = "blue", label = "Summ of 5 cancers")
 
 # allSolid = pl.plot(x,y[0], color = "red", label = "All solid cancers")
 # sumSolid = pl.plot(x,y[6], color = "blue",label = "Summ of 5 cancers")
+
 
 
 
