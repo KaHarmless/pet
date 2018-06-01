@@ -1,8 +1,12 @@
 import random as rnd
 import math
+import histo as h
 
 class data(object):
+
+
 	# all_solid lungs, colon, stomach, liver, bladder
+
 
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
@@ -12,30 +16,42 @@ class data(object):
 	# petDose = [6.23, 3.7, 4.8, 4.1, 4.1, 59.2]
 	petDose = [0., 3.7, 4.8, 4.1, 4.1, 59.2]
 
-	nStages = [4 for i in xrange(0,nCancers)]
+	nStages = [3 for i in xrange(0,nCancers)]
 
-	probFind = [[0 for i in xrange(0,nStages[j])] for j in xrange(0, nCancers)]
+	
 
-	probDeathCancer = [ [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8] ]
 
-	probDetect = 	  [ [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8],
-	                    [0.01, 0.1, 0.3, 0.8] ]
+	# probDeathCancer = [ [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8] ]
 
-	probSurv =        [ [50., 20., 10, 1],
-	                    [50., 20., 10, 1],
-	                    [50., 20., 10, 1],
-	                    [50., 20., 10, 1],
-	                    [50., 20., 10, 1],
-	                    [50., 20., 10, 1] ]
+	probDetect = 	  [ [ 0.,  0.,  0. ],   # all_solid 
+	                    [96., 88. , 94.],   # lungs, 
+	                    [95., 29.,  78.],   # colon, 
+	                    [47., 34. , 50.],   # stomach,
+	                    [82., 63.,  21.],   # liver, 
+	                    [60., 85., 100.] ]  # bladder
+	      
+
+	probSurv =        [ [100.,  100.,   100.],    # all_solid 
+	                    [80.22, 62.55, 25.09],    # lungs, 
+	                    [95.72, 91.47, 56.84],    # colon, 
+	                    [81.46 , 70.25, 29.16],   # stomach,
+	                    [66.56,  37.59, 15.35],   # liver, 
+	                    [89.20,  71.17, 29.81] ]  # bladder
+
+
+	# probSurv =        [ [100.,  100.,   100.],    # all_solid 
+	#                     [80.22, 62.55, 25.09],    # lungs, 
+	#                     [95.72, 91.47, 56.84],    # colon, 
+	#                     [81.46 , 70.25, 29.16],   # stomach,
+	#                     [66.56,  37.59, 15.35],   # liver, 
+	#                     [89.20,  71.17, 29.81] ]  # bladder
+
+
 
 	L = 5 # Latency
 
@@ -49,9 +65,14 @@ class data(object):
 
 		self.ifBckg = baselineFlag
 
-		self.baselineRisk = [[0 for i in xrange(0, 100)] for j in xrange(0, self.nCancers)]
+		self.baselineRisk = [[0 for i in xrange(0, 100)] for j in xrange(0, self.nCancers+1)]
 		self.canProbs = [[] for i in xrange(0, 150)]
 
+
+
+		self.canStage =[h.histo(6, 0, 6) for i in xrange(1, self.nCancers+2) ]
+		self.diagnosTime =[h.histo(210, -0.5, 210 - 0.5) for i in xrange(1, self.nCancers+2) ]
+		
 		self.readData()
 		self.generateProbs()
 
