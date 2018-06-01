@@ -2,6 +2,7 @@ import cancer
 import random
 import data
 import math
+import histo as h
 import copy as cp
 
 class person(object):
@@ -13,13 +14,13 @@ class person(object):
 		self.age = 1
 		self.sex = 0
 
+		self.date = 1
+
 		self.index = 0
 		
 		self.cancerProb = [] 
 
 		self.cancers = []
-
-		self.probDeath = 0
 
 		self.age = self.generateAge()    # generate age
 		self.startAge = self.age         # save initial age
@@ -30,11 +31,9 @@ class person(object):
 
 		self.ageGetCancer = []
 
+		self.badMarker = False
 		# for i in xrange(0,self.startAge):
 		# 	self.dose.append(0)
-
-
-
 
 
 
@@ -42,31 +41,37 @@ class person(object):
 		return 1
 
 
+
 	def increaseAge(self): #################################
 		self.age += 1                           # increment age
-		self.isGettingCancer() 
-		# if self.age < 20:                       # if younger then 20 - has no radiation
-		# 	self.ifRad = False
-		# else:
-		# 	self.ifRad = True
-		                 # check if he's getting cancer this year
-		
+		self.diagnostics()						# try to detect 
+		for i in self.cancers:                  # update tumors
+			if i.probablyDead:
+				continue		                
+			i.ownerAge = self.age
+			i.grow()
+			if i.stage > 3:
 
-		# growRes = False
-		# for i in self.cancers:
-		# 	i.age = self.age
-		# 	growRes = i.grow()
+				i.probablyDead = True
+				self.badMarker = True
+				continue
+		self.isGettingCancer()                  # check for new cancer
 
-		# self.toDie = growRes
 
-	def diagnosis(self):
-		dice = random.random()
+
+	def diagnostics(self):
 		for i in self.cancers:
-			if dice < i.probFind:
+			if i.stage == 0:
+				return
+			if i.probablyDead or i.isFound:
+				return
+			dice = random.random()
+			if dice < self.info.probDetect[i.cancerType][i.stage - 1]:
 				i.isFound = True
 				i.ageFound = self.age
-				return True
-		return False
+				self.info.canStage[i.cancerType-1].fill(i.stage)
+				self.info.diagnosTime[i.cancerType-1].fill(self.date)
+
 
 
 
@@ -83,7 +88,7 @@ class person(object):
 			self.cancerProb = self.info.canProbs[95]
 		# print self.cancerProb
 
-		for iCan in xrange(0, self.info.nCancers):
+		for iCan in xrange(1, self.info.nCancers):
 			dice = random.random()   # get random value
 			if dice < self.cancerProb[iCan]:
 				self.makeCancer(iCan)
@@ -126,6 +131,7 @@ class person(object):
 	def makeCancer(self, i):      # make a cancer
 		newCancer = cancer.cancer(i,self.age)
 		newCancer.cancerName = self.info.cancerName[i]
+		newCancer.info = cp.copy(self.info)
 		self.cancers.append(cp.copy(newCancer))
 		self.ageGetCancer.append(self.age)
 
