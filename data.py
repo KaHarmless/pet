@@ -1,8 +1,12 @@
 import random as rnd
 import math
+import histo as h
 
 class data(object):
+
+
 	# all_solid lungs, colon, stomach, liver, bladder
+
 
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
@@ -12,34 +16,65 @@ class data(object):
 	# petDose = [6.23, 3.7, 4.8, 4.1, 4.1, 59.2]
 	petDose = [0., 3.7, 4.8, 4.1, 4.1, 59.2]
 
-	# nCancers = 5
-	# cancerName = ["lungs", "colon", "stomach", "liver", "bladder"]
-	# betam = [2.3, 3.2, 4.9, 2.2, 1.2]
-	# eta = [5.2, 2.8, 2.8, 4.1, 6.]      
-	# gamma = [-4,1, -4,1, -4,1, -4,1, -4,1]
-	# petDose = [3.7, 4.8, 4.1, 4.1, 59.2]
+	nStages = [3 for i in xrange(0,nCancers)]
 
-	# delta\\
+	
+
+
+	# probDeathCancer = [ [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8],
+	#                     [0.01, 0.1, 0.3, 0.8] ]
+
+	probDetect = 	  [ [ 0.,  0.,  0. ],   # all_solid 
+	                    [96., 88. , 94.],   # lungs, 
+	                    [95., 29.,  78.],   # colon, 
+	                    [47., 34. , 50.],   # stomach,
+	                    [82., 63.,  21.],   # liver, 
+	                    [60., 85., 100.] ]  # bladder
+	      
+
+	probSurv =        [ [100.,  100.,   100.],    # all_solid 
+	                    [80.22, 62.55, 25.09],    # lungs, 
+	                    [95.72, 91.47, 56.84],    # colon, 
+	                    [81.46 , 70.25, 29.16],   # stomach,
+	                    [66.56,  37.59, 15.35],   # liver, 
+	                    [89.20,  71.17, 29.81] ]  # bladder
+
+
+	# probSurv =        [ [100.,  100.,   100.],    # all_solid 
+	#                     [80.22, 62.55, 25.09],    # lungs, 
+	#                     [95.72, 91.47, 56.84],    # colon, 
+	#                     [81.46 , 70.25, 29.16],   # stomach,
+	#                     [66.56,  37.59, 15.35],   # liver, 
+	#                     [89.20,  71.17, 29.81] ]  # bladder
+
+
 
 	L = 5 # Latency
 
-	# petDose = 6.23
-
-	# petDose = [133.1, 3.7, 4.8, 4.1, 4.1, 59.2]
-
-	# petDose = [4.8, 3.7, 4.8, 4.1, 4.1, 59.2]
-	# petDose = 
-
-	probDeathCancer = [7., 7., 7., 7., 7.]        # number of people to die from cancer for every type of cancer (per 1000)
-	
 
 	probDeath = [0 for i in xrange(0,100)]
+	nbirth =  12.2 
 
-	# probDeath =  8.44                          # probability to die just because (n per 1000) 
+	                              # number of birth per 1000
 
-	nbirth =  12.2                               # number of birth per 1000
+	def __init__(self, baselineFlag): # baseline flag: 0 - only background, 1 - all together
+
+		self.ifBckg = baselineFlag
+
+		self.baselineRisk = [[0 for i in xrange(0, 100)] for j in xrange(0, self.nCancers+1)]
+		self.canProbs = [[] for i in xrange(0, 150)]
 
 
+
+		self.canStage =[h.histo(6, 0, 6) for i in xrange(1, self.nCancers+2) ]
+		self.diagnosTime =[h.histo(210, -0.5, 210 - 0.5) for i in xrange(1, self.nCancers+2) ]
+		
+		self.readData()
+		self.generateProbs()
 
 	# getters
 
@@ -69,15 +104,7 @@ class data(object):
 
 
 
-	def __init__(self, baselineFlag): # baseline flag: 0 - only background, 1 - only PET, 2 - sum
-
-		self.ifBckg = baselineFlag
-
-		self.baselineRisk = [[0 for i in xrange(0, 100)] for j in xrange(0, self.nCancers)]
-		self.canProbs = [[] for i in xrange(0, 150)]
-
-		self.readData()
-		self.generateProbs()
+	
 		# print self.canProbs
 
 	def genBirth(self, n):             # generate a number of kids to born
@@ -120,17 +147,16 @@ class data(object):
 			else:	
 				exponent = math.exp(self.getGamma(iCan) * eStar)
 				attainedGuy = ( (age - self.L)/60. )**self.getEta(iCan)
-				# if self.ifBckg != 0:
-					# ear.append( self.getBetaS(0, iCan) * doseVal[iCan] * exponent * attainedGuy /10**7 )
-				# else:
-				ear.append(0.)
+				if self.ifBckg == 1:
+					ear.append( self.getBetaS(0, iCan) * doseVal[iCan] * exponent * attainedGuy /10**7 )
+				else:
+					ear.append(0.)
 		return ear
 
 
 	def generateProbs(self):
 		for age in xrange(1, 97):
 			currentProb = [self.baselineRisk[i][age-1] for i in xrange(0, self.nCancers)]
-			# currentProb = [0 for i in xrange(0, self.nCancers)]
 
 			if age < 25:
 				self.canProbs[age] = currentProb
@@ -163,7 +189,7 @@ class data(object):
 				words = k.split(',')
 				if words[0] == 'age':
 					continue
-				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) * float(words[3])
+				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) / float(words[3])
 				if canId == 0:
 					self.probDeath[int(words[0]) -1] = float(words[1])*1000.
 				words = []
