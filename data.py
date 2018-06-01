@@ -96,8 +96,8 @@ class data(object):
 	def getProbDeath(self, age):
 		return self.probDeath[age-1]
 	
-	def getProbDeathCancer(self,i):
-		return self.probDeathCancer[i]
+	def getProbSurvCancer(self, cancerIndex, stage):
+		return self.probSurv[cancerIndex][stage-1]
 
 
 
@@ -118,14 +118,23 @@ class data(object):
 
 
 
-	def ifDie(self, per):             # check is it time to die     
+	def ifDie(self, per):
+		probDie = 0. 
+		for i in per.cancers:     # check is it time to die 
+			if i.stage == 0:
+				break
+			if i.stage == 4:
+				return True
+
+			probDie += ( 1. - self.getProbSurvCancer(i.cancerType, i.stage))
+
 		dice = rnd.random()
 		if per.age <= 96:
 			prob = self.getProbDeath(per.age)     # getting probability
 		else:
 			# prob = self.getProbDeath(96)
 			prob = 400.
-		if dice < prob/1000.:          # check probability 
+		if dice < (prob/1000. + probDie):          # check probability 
 			return True
 		else:
 			return False 
@@ -189,7 +198,7 @@ class data(object):
 				words = k.split(',')
 				if words[0] == 'age':
 					continue
-				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) / float(words[3])
+				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) / float(words[3]) * float(words[4])
 				if canId == 0:
 					self.probDeath[int(words[0]) -1] = float(words[1])*1000.
 				words = []
