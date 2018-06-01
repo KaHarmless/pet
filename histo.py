@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt 
 import copy as cp
+from mpl_toolkits.mplot3d import Axes3D
 
 def finish():
 	plt.legend()
@@ -142,8 +143,8 @@ class histo(object):
 		self.nEntries = int(self.nEntries)
 		self.xMax = sorted(x)[0]
 		self.xMin = sorted(x)[-1]
-		step = x[1]-x[0]
-		self.nBins = int( (self.xMax - self.xMin)/step )
+		self.step = x[1]-x[0]
+		self.nBins = int( (self.xMax - self.xMin)/self.step )
 		self.data = []
 		for i in xrange(0,self.len(y)):
 			for j in xrange(0, y[i]):
@@ -200,6 +201,3 @@ class histo(object):
 			# self.appendPoint(x[i]+step/2., y[i])
 
 		self.wasHistogramed = True
-
-
-
