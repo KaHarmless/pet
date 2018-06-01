@@ -61,6 +61,9 @@ Population = []
 
 ################ main loop by years of experiment ###############
 
+firstSick = False
+firstSickYear = 0
+
 for j in xrange(1,expDur + 1):
 
 	nFolk = len(people)
@@ -87,6 +90,9 @@ for j in xrange(1,expDur + 1):
 		# N.fill(j) 
 			
 		for k in xrange(0,len(i.cancers)):
+			if not firstSick:
+				firstSickYear = j
+				firstSick = True
 			if i.cancers[k].stage == 1:
 				y[i.cancers[k].cancerType].fill(j)
 
@@ -96,9 +102,6 @@ for j in xrange(1,expDur + 1):
 
 		if info.ifDie(i):      # getting probability to die and check
 			continue                    # go to the next person
-
-		if i.toDie:
-			continue
 
 		i.increaseAge()          # increase age of person
 
@@ -110,11 +113,7 @@ for j in xrange(1,expDur + 1):
 
 	y[6].makeZero()
 	info.diagnosTime[6].makeZero()
-	for k in xrange(1, 6):
-		y[6].histAdd(y[k])
 
-	for k in xrange(0, 6):
-		info.diagnosTime[6].histAdd(info.diagnosTime[k])
 
 
 	if len(people) < 1 :
@@ -141,63 +140,68 @@ for j in xrange(1,expDur + 1):
 # N.draw(normalized = True)
 
 
+for k in xrange(1, 6):
+	y[6].histAdd(y[k])
+
+for k in xrange(0, 5):
+	info.diagnosTime[5].histAdd(info.diagnosTime[k])
+
 
 
 for i in xrange(1, info.nCancers+1):
 	y[i].makeRegHist()
 	# info.diagnosTime[i].makeRootHist()
+for i in xrange(0, info.nCancers):
+	info.diagnosTime[i].makeRegHist()
 
-# y[6].multiplateByNum(1000.)
-
-info.diagnosTime[6]
 
 # print len(y[6].x), len(y[6].y)
-for i in xrange(0, len(y[6].y) ):
+for i in xrange(firstSickYear, y[1].nBins + firstSickYear):
 	try:
-		d = y[6].getBinContent(i) / Population[i] * 10000.
+		d = y[6].getBinContent(i) / Population[i-firstSickYear] * 10000.
 		y[6].setBinContent(i, d)
-		c = info.diagnosTime[6].getBinContent(i) / Population[i] * 10000.
-		info.diagnosTime[6].setBinContent(i, c)
+		c = info.diagnosTime[5].getBinContent(i) / Population[i-firstSickYear] * 10000.
+		info.diagnosTime[5].setBinContent(i, c)
 	except IndexError:
-		print "whoops..."
+		# print "whoops..."
 		continue
 		
 
 
 # y[1].draw(color = "red", label = "Lung cancer")
 # y[2].draw(color = "green", label = "Colon cancer")
-# y[3].draw(color = "blue", label = "Stomach cancer")
+y[3].draw(color = "blue", label = "Stomach cancer")
 # y[4].draw(color = "cyan", label = "Liver cancer")
 # y[5].draw(color = "magenta", label = "Bladder cancer")
-y[6].draw(color = "blue", label = "Have got cancer last year (per 10k)")
+# y[6].draw(color = "blue", label = "Have got cancer last year (per 10k)")
 
 
 
 
-for i in xrange(0, info.nCancers-1):
-	info.canStage[i].makeRootHist()
+# for i in xrange(0, info.nCancers-1):
+# 	info.canStage[i].makeRootHist()
 
 
-# info.canStage[1].draw(color = "red", label = "Lung cancer")
-# info.canStage[2].draw(color = "green", label = "Colon cancer")
-# info.canStage[3].draw(color = "blue", label = "Stomach cancer")
-# info.canStage[4].draw(color = "cyan", label = "Liver cancer")
-# info.canStage[5].draw(color = "magenta", label = "Bladder cancer")
+# info.canStage[0].draw(color = "red", label = "Lung cancer")
+# info.canStage[1].draw(color = "green", label = "Colon cancer")
+# info.canStage[2].draw(color = "blue", label = "Stomach cancer")
+# info.canStage[3].draw(color = "cyan", label = "Liver cancer")
+# info.canStage[4].draw(color = "magenta", label = "Bladder cancer")
 
 
 
 
-for i in xrange(0, info.nCancers-1):
-	info.diagnosTime[i].makeRootHist()
+# for i in xrange(0, info.nCancers-1):
+# 	info.diagnosTime[i].makeRootHist()
 
-info.diagnosTime[6].makeRootHist()
+# info.diagnosTime[6].makeRootHist()
 
-# info.diagnosTime[1].draw(color = "red", label = "Lung cancer")
-# info.diagnosTime[2].draw(color = "green", label = "Colon cancer")
-# info.diagnosTime[3].draw(color = "blue", label = "Stomach cancer")
-# info.diagnosTime[4].draw(color = "cyan", label = "Liver cancer")
-# info.diagnosTime[5].draw(color = "magenta", label = "Bladder cancer")
-info.diagnosTime[6].draw(color = "red", label = "Have detected cancer last year (per 10k)")
+# info.diagnosTime[0].draw(color = "red", label = "Lung cancer")
+# info.diagnosTime[1].draw(color = "green", label = "Colon cancer")
+info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
+# info.diagnosTime[3].draw(color = "cyan", label = "Liver cancer")
+# info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
+# info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
 
 
 
@@ -227,20 +231,30 @@ info.diagnosTime[6].draw(color = "red", label = "Have detected cancer last year 
 
 
 
+plotOutput = open("gotSickPY.csv","w")
+plotOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
+for i in xrange(0,len(x)):
+	msg = str(x[i])+','
+	for j in xrange(1, len(y)+1):
+		msg += str(y[j].y[i]) + ','
+	msg += '\n'
+	plotOutput.write(msg)
+plotOutput.close()
+
+plotOutput = open("gotDetectedPY.csv","w")
+plotOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
+for i in xrange(0,len(x)):
+	msg = str(x[i])+','
+	for j in xrange(0, 6):
+		msg += str(info.diagnosTime[j].y[i]) + ','
+	msg += '\n'
+	plotOutput.write(msg)
+plotOutput.close()
+
+
 
 
 
 h.finish()
 
 
-
-
-# plotOutput = open("data.csv","w")
-# plotOutput.write("age,all(danger),lungs,colon,stomach,liver,bladder\n")
-# for i in xrange(0,len(x)):
-# 	# msg = str(x[i])+','
-# 	# for j in xrange(1, len(y)-1):
-# 		# msg += str(y[j][i]) + ','
-# 	# msg += '\n'
-# 	plotOutput.write(str(x[i])+','+str(y[0][i])+','+str(y[1][i])+','+str(y[2][i])+','+str(y[3][i])+','+str(y[4][i])+','+str(y[5][i])+'\n')
-# plotOutput.close()

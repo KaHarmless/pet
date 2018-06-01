@@ -45,26 +45,17 @@ class person(object):
 	def increaseAge(self): #################################
 		self.age += 1                           # increment age
 		self.diagnostics()						# try to detect 
-		for i in self.cancers:                  # update tumors
-			if i.probablyDead:
-				continue		                
+		for i in self.cancers:                  # update tumors                
 			i.ownerAge = self.age
 			i.grow()
-			if i.stage > 3:
-
-				i.probablyDead = True
-				self.badMarker = True
-				continue
 		self.isGettingCancer()                  # check for new cancer
 
 
 
 	def diagnostics(self):
 		for i in self.cancers:
-			if i.stage == 0:
-				return
-			if i.probablyDead or i.isFound:
-				return
+			if i.stage == 0 or i.isFound:
+				continue
 			dice = random.random()
 			if dice < self.info.probDetect[i.cancerType][i.stage - 1]:
 				i.isFound = True
