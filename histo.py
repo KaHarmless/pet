@@ -85,6 +85,7 @@ class histo(object):
 		y = [0. for i in x]
 		norma = self.nEntries
 		data = sorted(self.data)
+		iprev = 0
 		for i in data:
 			if i < self.xMin:
 				self.underflow += 1.

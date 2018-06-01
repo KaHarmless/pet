@@ -14,7 +14,7 @@ import copy as cp
 
                        ######################################
                        #                                    #        
-MODE = 0               # PET impact:    0 - only background,#
+MODE = 1               # PET impact:    0 - only background,#
                        #                1 - background + pet#
 nPeople = 10**5        ######################################
 
@@ -285,12 +285,12 @@ for i in xrange(0, info.nCancers):
 
 
 sickOutput = open("gotSickPY.csv","w")
-sickOutput.write("age,lungs,colon,stomach,liver,bladder,sum,,population,birth,death\n")
+sickOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
 for i in xrange(0,len(x)):
 	msg = str(x[i])+','
 	for j in xrange(1, len(info.nSick)):
 		msg += str(info.nSick[j].y[i]) + ','
-		msg += '\n'
+	msg += '\n'
 	# msg += ',,' + str(N.y[i]) + ','+ str(info.nBirth.y[i])+ ','+ str(info.nDie.y[i])+ '\n'
 	sickOutput.write(msg)
 sickOutput.close()
