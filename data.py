@@ -74,6 +74,10 @@ class data(object):
 		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+2) ]
 		self.nSick = [h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,self.nCancers+1)]
 
+		self.nDie = h.histo(self.expDur, - 0.5, self.expDur - 0.5)
+		self.nBirth = h.histo(self.expDur, - 0.5, self.expDur - 0.5)
+
+
 		# self.canStage = [[h.histo(6, 0, 6) for i in xrange(0,self.nCancers+1)] for j in xrange(1, self.expDur+2)]
 
 		self.readData()

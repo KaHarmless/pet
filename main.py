@@ -52,7 +52,7 @@ x = xrange(0, expDur)
 
 y = [h.histo(expDur, -0.5, expDur-0.5) for j in xrange(0,info.nCancers+1)]
 
-# N = h.histo()   # initialization h.histo(nBins, xMin , xMax)
+N = h.histo(200, 0, expDur+2)   # initialization h.histo(nBins, xMin , xMax)
 
 Population = []
 
@@ -101,9 +101,10 @@ for j in xrange(1,expDur + 1):
 
 		
 		# if j == 200:
-			# N.fill(i.age)   # age distribution
+		N.fill(i.age)   # age distribution
 
 		if info.ifDie(i):      # getting probability to die and check
+			info.nDie.fill(j)
 			continue                    # go to the next person
 
 		i.increaseAge()          # increase age of person
@@ -131,15 +132,18 @@ for j in xrange(1,expDur + 1):
 		tempPer.probDeath = info.getProbDeath(tempPer.age)
 
 		tempPer.info = info ################## temp
-
+		info.nBirth.fill(j)
 		people.append(cp.copy(tempPer))              # add out temporary man to the list
 
 #####################################################################
 
-
+# N.makeRegHist()
+# info.nDie.makeRegHist()
+# info.nBirth.makeRegHist()
 
 # N.draw(rootLike = True, color = 'red', label = "Population over time")
-# N.draw(normalized = True)
+# nDie.draw(rootLike = True, color = 'blue', label = "Dying per year")
+# # N.draw(normalized = True)
 
 
 
@@ -222,7 +226,7 @@ for j in xrange(1, info.nCancers+1):
 # info.nSick[4].draw(color = "cyan", label = "Liver cancer")
 # info.nSick[5].draw(color = "magenta", label = "Bladder cancer")
 
-info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
+# info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
 
 
 
@@ -251,7 +255,7 @@ for i in xrange(0, info.nCancers):
 # info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
 # info.diagnosTime[3].draw(color = "cyan", label = "Liver cancer")
 # info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
-info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
+# info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
 
 
 
@@ -281,12 +285,13 @@ info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year 
 
 
 sickOutput = open("gotSickPY.csv","w")
-sickOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
+sickOutput.write("age,lungs,colon,stomach,liver,bladder,sum,,population,birth,death\n")
 for i in xrange(0,len(x)):
 	msg = str(x[i])+','
 	for j in xrange(1, len(info.nSick)):
 		msg += str(info.nSick[j].y[i]) + ','
-	msg += '\n'
+		msg += '\n'
+	# msg += ',,' + str(N.y[i]) + ','+ str(info.nBirth.y[i])+ ','+ str(info.nDie.y[i])+ '\n'
 	sickOutput.write(msg)
 sickOutput.close()
 
