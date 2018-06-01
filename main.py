@@ -235,8 +235,8 @@ plotOutput = open("gotSickPY.csv","w")
 plotOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
 for i in xrange(0,len(x)):
 	msg = str(x[i])+','
-	for j in xrange(1, len(y)+1):
-		msg += str(y[j].y[i]) + ','
+	for j in xrange(1, len(y)):
+		msg += stre(y[j].y[i]) + ','
 	msg += '\n'
 	plotOutput.write(msg)
 plotOutput.close()
