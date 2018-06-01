@@ -7,7 +7,7 @@ class data(object):
 
 	# all_solid lungs, colon, stomach, liver, bladder
 
-
+	expDur = 210
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
 	betam = [22., 2.3, 3.2, 4.9, 2.2, 1.2]
@@ -70,9 +70,12 @@ class data(object):
 
 
 
-		self.canStage =[h.histo(6, 0, 6) for i in xrange(1, self.nCancers+2) ]
-		self.diagnosTime =[h.histo(210, -0.5, 210 - 0.5) for i in xrange(1, self.nCancers+2) ]
-		
+		self.canStage =[h.histo(13, -6, 6) for i in xrange(1, self.nCancers+2) ]
+		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+2) ]
+		self.nSick = [h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,self.nCancers+1)]
+
+		# self.canStage = [[h.histo(6, 0, 6) for i in xrange(0,self.nCancers+1)] for j in xrange(1, self.expDur+2)]
+
 		self.readData()
 		self.generateProbs()
 
@@ -126,7 +129,7 @@ class data(object):
 			if i.stage == 4:
 				return True
 
-			probDie += ( 1. - self.getProbSurvCancer(i.cancerType, i.stage))
+			probDie += ( 1. - self.getProbSurvCancer(i.cancerType, i.stage)/100.)
 
 		dice = rnd.random()
 		if per.age <= 96:
@@ -198,7 +201,7 @@ class data(object):
 				words = k.split(',')
 				if words[0] == 'age':
 					continue
-				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) / float(words[3]) * float(words[4])
+				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) / float(words[3])
 				if canId == 0:
 					self.probDeath[int(words[0]) -1] = float(words[1])*1000.
 				words = []

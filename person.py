@@ -11,7 +11,6 @@ class person(object):
 	def __init__(self): 
 		self.info = 0          # data object, our data container
 		# initial parameters of person
-		self.age = 1
 		self.sex = 0
 
 		self.date = 1
@@ -42,7 +41,7 @@ class person(object):
 
 
 
-	def increaseAge(self): #################################
+	def increaseAge(self):         #################################
 		self.age += 1                           # increment age
 		self.diagnostics()						# try to detect 
 		for i in self.cancers:                  # update tumors                
@@ -57,11 +56,12 @@ class person(object):
 			if i.stage == 0 or i.isFound:
 				continue
 			dice = random.random()
-			if dice < self.info.probDetect[i.cancerType][i.stage - 1]:
+			if dice < (self.info.probDetect[i.cancerType][i.stage - 1]/100.):
 				i.isFound = True
 				i.ageFound = self.age
-				self.info.canStage[i.cancerType-1].fill(i.stage)
+				# self.info.canStage[self.date][i.cancerType-1].fill(i.stage-1)
 				self.info.diagnosTime[i.cancerType-1].fill(self.date)
+				self.info.canStage[i.cancerType-1].fill(i.stage-1)
 
 
 
@@ -125,6 +125,7 @@ class person(object):
 		newCancer.info = cp.copy(self.info)
 		self.cancers.append(cp.copy(newCancer))
 		self.ageGetCancer.append(self.age)
+		self.info.nSick[i].fill(self.date)
 
 
 
