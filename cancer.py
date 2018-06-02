@@ -11,12 +11,9 @@ class cancer(object):
 		self.ownerAge = start
 
 		self.cancerName = ""
-		self.stage = 0
-		self.isFound = 0
-		self.ageFound = 0
-		self.stageFound = 0
+		self.stage = 1
+		self.isFound = False
 
-		self.isCured = False
 		
 		self.probablyDead = False
 		
