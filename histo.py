@@ -94,6 +94,7 @@ class histo(object):
 			for j in xrange(0,self.nBins):
 				if i >= (x[j] - step) and i <= (x[j] + step):
 					y[j] += 1.
+					iprev = j
 		if self.underflow > norma * self.missingRatio or self.overflow > norma * self.missingRatio:
 			self.xMin = None
 			self.xMax = None

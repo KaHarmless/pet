@@ -43,7 +43,8 @@ class person(object):
 
 	def increaseAge(self):         #################################
 		self.age += 1                           # increment age
-		self.diagnostics()						# try to detect 
+		if self.info.agesUnderRad[self.age-1] == 1:
+			self.diagnostics()						# try to detect 
 		for i in self.cancers:                  # update tumors                
 			i.ownerAge = self.age
 			i.grow()
