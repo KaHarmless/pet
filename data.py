@@ -18,6 +18,8 @@ class data(object):
 
 	nStages = [3 for i in xrange(0,nCancers)]
 
+	agesUnderRad = [0 for i in xrange(0, 120)]
+
 	
 
 
@@ -61,7 +63,9 @@ class data(object):
 
 	                              # number of birth per 1000
 
-	def __init__(self, baselineFlag): # baseline flag: 0 - only background, 1 - all together
+	def __init__(self, period = 1, baselineFlag): # baseline flag: 0 - only background, 1 - all together
+		self.period = period
+		self.initAgesAtPET()
 
 		self.ifBckg = baselineFlag
 
@@ -82,6 +86,16 @@ class data(object):
 
 		self.readData()
 		self.generateProbs()
+
+
+
+
+	def initAgesAtPET(self):
+		for age in xrange(1, len(self.agesUnderRad)+1):
+			if age > 20 and age < 70:
+				if age%self.period == 0:
+					self.agesUnderRad[age-1] = 1
+
 
 	# getters
 
@@ -179,7 +193,7 @@ class data(object):
 				continue
 
 			for ageAtExposure in xrange(1,age):
-				if ageAtExposure > 70:
+				if self.agesUnderRad[ageAtExposure-1] == 0:
 					break
 				currEAR = self.generateEAR(self.petDose, age, ageAtExposure)
 				for canType in xrange(0, self.nCancers):

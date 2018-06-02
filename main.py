@@ -12,16 +12,16 @@ import copy as cp
 
 ############################## temp
 
-                       ######################################
-                       #                                    #        
-MODE = 1               # PET impact:    0 - only background,#
-                       #                1 - background + pet#
-nPeople = 10**5        ######################################
+                       ##########################################
+T = 1                  # T means period of PET (once a T years) #        
+MODE = 1               # PET impact:    0 - only background    ,#
+                       #                1 - background + pet    #
+nPeople = 10**5        ##########################################
 
 
 
 ############################ initial cohort ##############
-info = data.data(MODE) 
+info = data.data(T, MODE) # 
 people = []
 for i in range(0,nPeople):
 	newPerson = person.person()
@@ -73,7 +73,7 @@ for j in xrange(1,expDur + 1):
 	Population.append(nFolk)
 
 	 # filling hist with numbers of people
-	# N[j-1] = nFolk
+	# N.fill(nFolk)
 
 	if j%20 == 0 and j != 0:
 		print ">>>", j
@@ -143,7 +143,7 @@ for j in xrange(1,expDur + 1):
 
 # N.draw(rootLike = True, color = 'red', label = "Population over time")
 # nDie.draw(rootLike = True, color = 'blue', label = "Dying per year")
-# # N.draw(normalized = True)
+# N.draw(normalized = True)
 
 
 
@@ -226,7 +226,7 @@ for j in xrange(1, info.nCancers+1):
 # info.nSick[4].draw(color = "cyan", label = "Liver cancer")
 # info.nSick[5].draw(color = "magenta", label = "Bladder cancer")
 
-# info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
+info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
 
 
 
@@ -255,7 +255,7 @@ for i in xrange(0, info.nCancers):
 # info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
 # info.diagnosTime[3].draw(color = "cyan", label = "Liver cancer")
 # info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
-# info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
+info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
 
 
 
