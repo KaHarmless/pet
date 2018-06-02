@@ -16,17 +16,11 @@ class person(object):
 		self.date = 1
 
 		self.index = 0
-		
-		self.cancerProb = [] 
 
 		self.cancers = []
 
 		self.age = self.generateAge()    # generate age
 		self.startAge = self.age         # save initial age
-
-		self.ifRad = False               # NEW if is having radiation
-
-		self.toDie = False
 
 		self.ageGetCancer = []
 

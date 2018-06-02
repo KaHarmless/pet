@@ -146,8 +146,6 @@ class data(object):
 	def ifDie(self, per):
 		probDie = 0. 
 		for i in per.cancers:     # check is it time to die 
-		# 	if i.stage == 0:
-		# 		break
 			if i.stage == 4:
 				return True
 

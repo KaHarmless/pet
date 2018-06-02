@@ -15,8 +15,8 @@ import copy as cp
                        ##########################################
 T = 1                  # T means period of PET (once a T years) #        
 MODE = 1               # PET impact:    0 - only background    ,#
-                       #                1 - background + pet    #
-nPeople = 10**4        ##########################################
+                       # (MODE)         1 - background + pet    #
+nPeople = 10**5        ##########################################
 
 
 
@@ -220,6 +220,7 @@ for j in xrange(1, info.nCancers+1):
 
 # info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
 
+info.nSick[6].draw(color = "red", label = "Have got cancer last year (per 10k)")
 
 
 
@@ -246,6 +247,7 @@ for j in xrange(1, info.nCancers+1):
 # info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
 # info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
 
+info.diagnosTime[5].draw(color = "blue", label = "Have detected cancer last year (per 10k)")
 
 
 
@@ -256,6 +258,8 @@ for j in xrange(1, info.nCancers+1):
 # info.nSurvival[3].draw(color = "cyan", label = "Liver cancer")
 # info.nSurvival[4].draw(color = "magenta", label = "Bladder cancer")
 # info.nSurvival[5].draw(color = "black", label = "Total (per 10k)")
+
+info.nSurvival[5].draw(color = "green", label = "Healed last year (per 10k)")
 
 
 # z = [[info.diagnosTime[i][j]/y[i][j] for i in xrange(1,6)] for j in xrange(0,y.nBins)]:
