@@ -65,7 +65,7 @@ class data(object):
 
 	                              # number of birth per 1000
 
-	def __init__(self,baselineFlag, period = 1): # baseline flag: 0 - only background, 1 - all together
+	def __init__(self,baselineFlag, period = 1): # baseline flag: 0 - only background, 1 - all together!!!!!!!!!
 		self.period = period
 		self.initAgesAtPET()
 
