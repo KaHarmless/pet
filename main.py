@@ -19,9 +19,12 @@ MODE = 1               # PET impact:    0 - only background    ,#
 nPeople = 10**5        ##########################################
 
 
+print "Experiment for:\t", nPeople, " people"
+print "With period:\t", T, "years"
+print "Mode: \t\t",MODE  
 
 ############################ initial cohort ##############
-info = data.data(T, MODE) # 
+info = data.data(MODE, T) # 
 people = []
 for i in range(0,nPeople):
 	newPerson = person.person()
@@ -86,23 +89,13 @@ for j in xrange(1,expDur + 1):
 
 	for i in people:             # loop for each person every year
 		i.date = j
-		if i.age > 140:
-			print "I'm lucky man! My age is", i.age, "years!\n I was born in", i.startAge, "!"
-		
 
 		N.fill(i.age)   # age distribution
-
 
 		if info.ifDie(i):      # getting probability to die and check
 			info.nDie.fill(j)
 			continue                    # go to the next person
 
-		# for k in i.cancers:
-		# 	if k.isFound:
-		# 		info.canStage[k.cancerType][k.stage-1].fill(j)
-		# 		info.canStage[6][k.stage-1].fill(j)
-			# info.canStage[k.cancerType][k.stage-1].fill(i.age)
-			# info.canStage[6][k.stage-1].fill(i.age)
 
 		i.increaseAge()          # increase age of person
 

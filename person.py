@@ -92,12 +92,12 @@ class person(object):
 				prob = i.info.getProbSurvCancer(i.cancerType, i.stage)/100.
 				dice = random.random()   # get random value
 				if dice > prob:
-					newCancerList.append(cp.copy(i))
+					newCancerList.append(i)
 				else:
 					self.info.nSurvival[i.cancerType-1].fill(self.date)
 					self.info.nSurvival[5].fill(self.date)
 			else:
-				newCancerList.append(cp.copy(i))
+				newCancerList.append(i)
 		self.cancers = None
 		self.cancers = newCancerList
 
