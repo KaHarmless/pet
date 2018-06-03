@@ -16,17 +16,11 @@ class person(object):
 		self.date = 1
 
 		self.index = 0
-		
-		self.cancerProb = [] 
 
 		self.cancers = []
 
 		self.age = self.generateAge()    # generate age
 		self.startAge = self.age         # save initial age
-
-		self.ifRad = False               # NEW if is having radiation
-
-		self.toDie = False
 
 		self.ageGetCancer = []
 
@@ -42,13 +36,21 @@ class person(object):
 
 
 	def increaseAge(self):         #################################
-		self.age += 1                           # increment age
+
 		if self.info.agesUnderRad[self.age-1] == 1:
 			self.diagnostics()						# try to detect 
+		self.canTreat()
+
 		for i in self.cancers:                  # update tumors                
+			if i.isFound:
+				self.info.canStage[i.cancerType][i.stage-1].fill(self.date)
+				self.info.canStage[6][i.stage-1].fill(self.date)
 			i.ownerAge = self.age
 			i.grow()
+
+
 		self.isGettingCancer()                  # check for new cancer
+		self.age += 1                           # increment age
 
 
 
@@ -62,10 +64,7 @@ class person(object):
 				i.ageFound = self.age
 				# self.info.canStage[self.date][i.cancerType-1].fill(i.stage-1)
 				self.info.diagnosTime[i.cancerType-1].fill(self.date)
-				self.info.canStage[i.cancerType-1].fill(i.stage-1)
-
-
-
+				# self.info.canStage[i.cancerType-1].fill(i.stage-1)
 
 
 
@@ -84,6 +83,23 @@ class person(object):
 			dice = random.random()   # get random value
 			if dice < self.cancerProb[iCan]:
 				self.makeCancer(iCan)
+
+
+	def canTreat(self):
+		newCancerList = []
+		for i in self.cancers:
+			if i.isFound:
+				prob = i.info.getProbSurvCancer(i.cancerType, i.stage)/100.
+				dice = random.random()   # get random value
+				if dice > prob:
+					newCancerList.append(cp.copy(i))
+				else:
+					self.info.nSurvival[i.cancerType-1].fill(self.date)
+					self.info.nSurvival[5].fill(self.date)
+			else:
+				newCancerList.append(cp.copy(i))
+		self.cancers = None
+		self.cancers = newCancerList
 
 
 
@@ -125,6 +141,7 @@ class person(object):
 		newCancer.cancerName = self.info.cancerName[i]
 		newCancer.info = cp.copy(self.info)
 		self.cancers.append(cp.copy(newCancer))
+		newCancer = None
 		self.ageGetCancer.append(self.age)
 		self.info.nSick[i].fill(self.date)
 

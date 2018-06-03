@@ -38,20 +38,22 @@ class data(object):
 	                    [60., 85., 100.] ]  # bladder
 	      
 
-	probSurv =        [ [100.,  100.,   100.],    # all_solid 
-	                    [80.22, 62.55, 25.09],    # lungs, 
-	                    [95.72, 91.47, 56.84],    # colon, 
-	                    [81.46 , 70.25, 29.16],   # stomach,
-	                    [66.56,  37.59, 15.35],   # liver, 
-	                    [89.20,  71.17, 29.81] ]  # bladder
 
-
-	# probSurv =        [ [100.,  100.,   100.],    # all_solid 
+	# one year survival rate
+	# probSurv =        [ [100.,  100.,   100.],    # all_solid  
 	#                     [80.22, 62.55, 25.09],    # lungs, 
 	#                     [95.72, 91.47, 56.84],    # colon, 
 	#                     [81.46 , 70.25, 29.16],   # stomach,
 	#                     [66.56,  37.59, 15.35],   # liver, 
 	#                     [89.20,  71.17, 29.81] ]  # bladder
+
+	# five years survival
+	probSurv =        [ [100.,  100.,   100.],    # all_solid  
+	                    [56.3, 29.7, 4.7],    # lungs, 
+	                    [89.8, 72.1, 13.8],    # colon, 
+	                    [68.1, 30.6, 5.2],   # stomach,
+	                    [31.3,  10.6, 2.4],   # liver, 
+	                    [69.4,  34.9, 4.8] ]  # bladder
 
 
 
@@ -63,7 +65,7 @@ class data(object):
 
 	                              # number of birth per 1000
 
-	def __init__(self, period = 1, baselineFlag): # baseline flag: 0 - only background, 1 - all together
+	def __init__(self,baselineFlag, period = 1): # baseline flag: 0 - only background, 1 - all together
 		self.period = period
 		self.initAgesAtPET()
 
@@ -74,9 +76,11 @@ class data(object):
 
 
 
-		self.canStage =[h.histo(13, -6, 6) for i in xrange(1, self.nCancers+2) ]
-		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+2) ]
+		self.canStage =[[h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,3)] for i in xrange(1, self.nCancers+2) ]
+		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+1) ]
 		self.nSick = [h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,self.nCancers+1)]
+		self.nSurvival =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+1) ]
+
 
 		self.nDie = h.histo(self.expDur, - 0.5, self.expDur - 0.5)
 		self.nBirth = h.histo(self.expDur, - 0.5, self.expDur - 0.5)
@@ -142,12 +146,10 @@ class data(object):
 	def ifDie(self, per):
 		probDie = 0. 
 		for i in per.cancers:     # check is it time to die 
-			if i.stage == 0:
-				break
 			if i.stage == 4:
 				return True
 
-			probDie += ( 1. - self.getProbSurvCancer(i.cancerType, i.stage)/100.)
+		# 	probDie += ( 1. - self.getProbSurvCancer(i.cancerType, i.stage)/100.)
 
 		dice = rnd.random()
 		if per.age <= 96:
@@ -155,6 +157,7 @@ class data(object):
 		else:
 			# prob = self.getProbDeath(96)
 			prob = 400.
+
 		if dice < (prob/1000. + probDie):          # check probability 
 			return True
 		else:

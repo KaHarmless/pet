@@ -16,6 +16,14 @@ def main():
 	MODE = sys.argv[2]
 
 
+<<<<<<< HEAD
+=======
+                       ##########################################
+T = 1                  # T means period of PET (once a T years) #        
+MODE = 1               # PET impact:    0 - only background    ,#
+                       # (MODE)         1 - background + pet    #
+nPeople = 10**5        ##########################################
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 	############################## temp
 
@@ -57,7 +65,12 @@ def main():
 	# x = xrange(1, 120)
 
 
+<<<<<<< HEAD
 	y = [h.histo(expDur, -0.5, expDur-0.5) for j in xrange(0,info.nCancers+1)]
+=======
+Population = []
+# canAges = [0 for i in xrange(0,100)]
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 	N = h.histo(200, 0, expDur+2)   # initialization h.histo(nBins, xMin , xMax)
 
@@ -85,6 +98,7 @@ def main():
 		if j%20 == 0 and j != 0:
 			print ">>>", j
 
+<<<<<<< HEAD
 
 		
 		###############################################################################
@@ -113,6 +127,29 @@ def main():
 			if info.ifDie(i):      # getting probability to die and check
 				info.nDie.fill(j)
 				continue                    # go to the next person
+=======
+	for i in people:             # loop for each person every year
+		i.date = j
+		if i.age > 140:
+			print "I'm lucky man! My age is", i.age, "years!\n I was born in", i.startAge, "!"
+		
+
+		N.fill(i.age)   # age distribution
+
+
+		if info.ifDie(i):      # getting probability to die and check
+			info.nDie.fill(j)
+			continue                    # go to the next person
+
+		# for k in i.cancers:
+		# 	if k.isFound:
+		# 		info.canStage[k.cancerType][k.stage-1].fill(j)
+		# 		info.canStage[6][k.stage-1].fill(j)
+			# info.canStage[k.cancerType][k.stage-1].fill(i.age)
+			# info.canStage[6][k.stage-1].fill(i.age)
+
+		i.increaseAge()          # increase age of person
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 			i.increaseAge()          # increase age of person
 
@@ -152,6 +189,7 @@ def main():
 	# nDie.draw(rootLike = True, color = 'blue', label = "Dying per year")
 	# N.draw(normalized = True)
 
+<<<<<<< HEAD
 
 
 
@@ -168,10 +206,23 @@ def main():
 	for k in xrange(0, 5):
 		info.diagnosTime[5].histAdd(info.diagnosTime[k])
 		info.canStage[5].histAdd(info.canStage[k])
+=======
+info.diagnosTime[5].makeZero()
+info.nSick[6].makeZero()
+
+for k in xrange(1, 6):
+	y[6].histAdd(y[k])
+	info.nSick[6].histAdd(info.nSick[k])
+
+for k in xrange(0, 5):
+	info.diagnosTime[5].histAdd(info.diagnosTime[k])
+
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 
 
 
+<<<<<<< HEAD
 	for i in xrange(1, info.nCancers+1):
 		y[i].makeRegHist()
 		info.nSick[i].makeRegHist()
@@ -202,6 +253,45 @@ def main():
 			except IndexError:
 				print "whoops..."
 				continue
+=======
+for i in xrange(1, info.nCancers+1):
+	y[i].makeRegHist()
+	info.nSick[i].makeRegHist()
+
+
+for i in xrange(0, info.nCancers):
+	info.diagnosTime[i].makeRegHist()
+	info.nSurvival[i].makeRegHist()
+
+for j in info.canStage:
+	for k in j:
+		k.makeRegHist()
+
+
+# print len(y[6].x), len(y[6].y)
+for j in xrange(1, info.nCancers+1):
+	for i in xrange(firstSickYear, y[1].nBins):
+		try:
+			d = y[j].getBinContent(i) / Population[i-firstSickYear] * 10000.
+			y[j].setBinContent(i, d)
+			
+			c = info.diagnosTime[j-1].getBinContent(i) / Population[i-firstSickYear] * 10000.
+			info.diagnosTime[j-1].setBinContent(i, c)
+
+			a = info.nSurvival[j-1].getBinContent(i) / Population[i-firstSickYear] * 10000.
+			info.nSurvival[j-1].setBinContent(i, a)
+			
+			e = info.nSick[j].getBinContent(i) / Population[i-firstSickYear] * 10000.
+			info.nSick[j].setBinContent(i, e)
+
+			for k in info.canStage[j]:
+				f = k.getBinContent(i) / Population[i] * 10000.
+				k.setBinContent(i, f)
+
+		except IndexError:
+			print "whoops..."
+			continue
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 			# info.nSick[6].x = cp.copy(x)
 			# info.nSick[6].generateData()
@@ -219,12 +309,15 @@ def main():
 			
 
 
+<<<<<<< HEAD
 	# y[1].draw(color = "red", label = "Lung cancer")
 	# y[2].draw(color = "green", label = "Colon cancer")
 	# y[3].draw(color = "blue", label = "Stomach cancer")
 	# y[4].draw(color = "cyan", label = "Liver cancer")
 	# y[5].draw(color = "magenta", label = "Bladder cancer")
 	# y[6].draw(color = "blue", label = "Have got cancer last year (per 10k)")
+=======
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 
 	# info.nSick[1].draw(color = "red", label = "Lung cancer")
@@ -233,11 +326,17 @@ def main():
 	# info.nSick[4].draw(color = "cyan", label = "Liver cancer")
 	# info.nSick[5].draw(color = "magenta", label = "Bladder cancer")
 
+<<<<<<< HEAD
 	info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
+=======
+# info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
+
+info.nSick[6].draw(color = "red", label = "Have got cancer last year (per 10k)")
 
 
 
-
+<<<<<<< HEAD
 	for i in xrange(0, info.nCancers):
 		info.canStage[i].makeRootHist()
 
@@ -248,6 +347,15 @@ def main():
 	# info.canStage[3].draw(color = "cyan", label = "Liver cancer")
 	# info.canStage[4].draw(color = "magenta", label = "Bladder cancer")
 	# info.canStage[5].draw(color = "black", label = "Sum")
+=======
+
+# info.canStage[6][0].draw(color = "red", label = "First stage")
+# info.canStage[6][1].draw(color = "green", label = "Second stage")
+# info.canStage[6][2].draw(color = "blue", label = "Third stage")
+# info.canStage[3].draw(color = "cyan", label = "Liver cancer")
+# info.canStage[4].draw(color = "magenta", label = "Bladder cancer")
+# info.canStage[5].draw(color = "black", label = "Sum")
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 
 
@@ -257,6 +365,7 @@ def main():
 
 	# info.diagnosTime[6].makeRootHist()
 
+<<<<<<< HEAD
 	# info.diagnosTime[0].draw(color = "red", label = "Lung cancer")
 	# info.diagnosTime[1].draw(color = "green", label = "Colon cancer")
 	# info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
@@ -267,6 +376,31 @@ def main():
 
 
 	# z = [[info.diagnosTime[i][j]/y[i][j] for i in xrange(1,6)] for j in xrange(0,y.nBins)]:
+=======
+# info.diagnosTime[0].draw(color = "red", label = "Lung cancer")
+# info.diagnosTime[1].draw(color = "green", label = "Colon cancer")
+# info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
+# info.diagnosTime[3].draw(color = "cyan", label = "Liver cancer")
+# info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
+# info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
+
+info.diagnosTime[5].draw(color = "blue", label = "Have detected cancer last year (per 10k)")
+
+
+
+
+# info.nSurvival[0].draw(color = "red", label = "Lung cancer")
+# info.nSurvival[1].draw(color = "green", label = "Colon cancer")
+# info.nSurvival[2].draw(color = "blue", label = "Stomach cancer")
+# info.nSurvival[3].draw(color = "cyan", label = "Liver cancer")
+# info.nSurvival[4].draw(color = "magenta", label = "Bladder cancer")
+# info.nSurvival[5].draw(color = "black", label = "Total (per 10k)")
+
+info.nSurvival[5].draw(color = "green", label = "Healed last year (per 10k)")
+
+
+# z = [[info.diagnosTime[i][j]/y[i][j] for i in xrange(1,6)] for j in xrange(0,y.nBins)]:
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 
 	# zh = [h.histo(210, -0.5, 210 - 0.5) for i in xrange(1, info.nCancers+1)]
@@ -312,6 +446,7 @@ def main():
 		detectedOutput.write(msg)
 	detectedOutput.close()
 
+<<<<<<< HEAD
 	stageOutput = open("gotStagesPY.csv","w")
 	stageOutput.write("stage,lungs,colon,stomach,liver,bladder,sum\n")
 	for i in xrange(0,len(info.canStage[1].x)):
@@ -321,6 +456,31 @@ def main():
 		msg += '\n'
 		stageOutput.write(msg)
 	stageOutput.close()
+=======
+survivalOutput = open("survivalPY.csv","w")
+survivalOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
+for i in xrange(0,len(x)):
+	msg = str(x[i])+','
+	for j in xrange(0, 6):
+		msg += str(info.nSurvival[j].y[i]) + ','
+	msg += '\n'
+	survivalOutput.write(msg)
+survivalOutput.close()
+
+stageOutput = open("gotStagesPY.csv","w")
+stageOutput.write('age,lungs,colon,stomach,liver,bladder,sum,'+
+				  'second,lungs,colon,stomach,liver,bladder,sum,'+
+				  'third,lungs,colon,stomach,liver,bladder,sum,\n')
+for i in xrange(0,len(x)):
+	msg = str(x[i])+','
+	for j in xrange(0, 3):
+		for k in xrange(1,7):
+			msg += str(info.canStage[k][j].y[i]) + ','
+		msg += ','
+	msg += '\n'
+	stageOutput.write(msg)
+stageOutput.close()
+>>>>>>> d36b7a8f0ad91cf76b457e1b71b0d83c04371595
 
 
 
