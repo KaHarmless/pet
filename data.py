@@ -18,7 +18,7 @@ class data(object):
 
 	nStages = [3 for i in xrange(0,nCancers)]
 
-	agesUnderRad = [0 for i in xrange(0, 120)]
+	agesUnderRad = [0 for i in xrange(0, 200)]
 
 	
 
