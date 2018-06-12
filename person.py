@@ -31,7 +31,7 @@ class person(object):
 
 
 	def generateAge(self):
-		return 1
+		return ageDistribution()
 
 
 
@@ -56,7 +56,7 @@ class person(object):
 
 	def diagnostics(self):
 		for i in self.cancers:
-			if i.stage == 0 or i.isFound:
+			if i.stage == 0 or i.isFound or self.index == 1:
 				continue
 			dice = random.random()
 			if dice < (self.info.probDetect[i.cancerType][i.stage - 1]/100.):
@@ -78,6 +78,17 @@ class person(object):
 		else:
 			self.cancerProb = self.info.canProbs[95]
 		# print self.cancerProb
+		
+
+		if self.index == 1:
+			self.cancerProb = []
+			if self.age < 96:
+				for i in xrange(0, self.info.nCancers+1):
+					self.cancerProb.append(self.info.baselineRisk[i][self.age-1])
+			else:
+				for i in xrange(0, self.info.nCancers+1):
+					self.cancerProb.append(self.info.baselineRisk[i][95])
+
 
 		for iCan in xrange(1, self.info.nCancers):
 			dice = random.random()   # get random value
@@ -99,7 +110,7 @@ class person(object):
 			else:
 				newCancerList.append(i)
 		self.cancers = None
-		self.cancers = newCancerList
+		self.cancers = cp.copy(newCancerList)
 
 
 
@@ -160,3 +171,43 @@ class person(object):
 # 		return int(55 + random.random()*9)
 # 	else:
 # 		return int(65 + random.random()*15)
+
+def ageDistribution():  # generating age of person due to distribution
+	dice = random.random();
+	# return 20
+	if dice < 0.06913 :
+		return random.randint(1,4)
+	if dice < 0.141667 :
+		return random.randint(5,9)
+	if dice < 0.214697 :
+		return random.randint(10,14)
+	if dice < 0.286865 :
+		return random.randint(15,19)
+	if dice < 0.353343 :
+		return random.randint(20,24)
+	if dice < 0.417873 :
+		return random.randint(25,29)
+	if dice < 0.488917 :
+		return random.randint(30,34)
+	if dice < 0.56968 :
+		return random.randint(35,39)
+	if dice < 0.651532 :
+		return random.randint(40,44)
+	if dice < 0.723649 :
+		return random.randint(45,49)
+	if dice < 0.786366 :
+		return random.randint(50,54)
+	if dice < 0.834821 :
+		return random.randint(55,59)
+	if dice < 0.873615 :
+		return random.randint(60,64)
+	if dice < 0.907879 :
+		return random.randint(65,69)
+	if dice < 0.939651 :
+		return random.randint(70,74)
+	if dice < 0.966649 :
+		return random.randint(75,79)
+	if dice < 0.984491 :
+		return random.randint(80,84)
+	else:
+		return random.randint(85,100)

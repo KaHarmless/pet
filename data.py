@@ -188,20 +188,23 @@ class data(object):
 
 
 	def generateProbs(self):
+		# file = open("ear.csv","w")
 		for age in xrange(1, 97):
 			currentProb = [self.baselineRisk[i][age-1] for i in xrange(0, self.nCancers)]
-
+			# currentProb = [0 for i in xrange(0, self.nCancers)]
 			if age < 25:
 				self.canProbs[age] = currentProb
 				continue
 
 			for ageAtExposure in xrange(1,age):
 				if self.agesUnderRad[ageAtExposure-1] == 0:
-					break
+					continue
 				currEAR = self.generateEAR(self.petDose, age, ageAtExposure)
 				for canType in xrange(0, self.nCancers):
 					currentProb[canType] += currEAR[canType]
+			# file.write(str(age)+','+str(currentProb)+'\n')
 			self.canProbs[age] = currentProb
+		# file.close()
 		return
 ########################################################################
 

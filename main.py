@@ -31,7 +31,8 @@ for i in range(0,nPeople):
 	newPerson.info = info
 	newPerson.probDeath = info.getProbDeath(newPerson.age)
 	# newPerson.age = person.ageDistribution()
-	newPerson.index = 1
+	if newPerson.age > 20:
+		newPerson.index = 1
 	# newPerson.startAge = person.ageDistribution()
 	people.append(cp.copy(newPerson))  #initial group of people
 
@@ -90,7 +91,7 @@ for j in xrange(1,expDur + 1):
 	for i in people:             # loop for each person every year
 		i.date = j
 
-		N.fill(i.age)   # age distribution
+		N.fill(j)   # age distribution
 
 		if info.ifDie(i):      # getting probability to die and check
 			info.nDie.fill(j)
@@ -131,7 +132,7 @@ for j in xrange(1,expDur + 1):
 # info.nDie.makeRegHist()
 # info.nBirth.makeRegHist()
 
-# N.draw(rootLike = True, color = 'red', label = "Population over time")
+# N.draw(color = 'red', label = "Population over time")
 # nDie.draw(rootLike = True, color = 'blue', label = "Dying per year")
 # N.draw(normalized = True)
 
@@ -205,7 +206,7 @@ for j in xrange(1, info.nCancers+1):
 
 
 
-# info.nSick[1].draw(color = "red", label = "Lung cancer")
+info.nSick[1].draw(color = "red", label = "Lung cancer")
 # info.nSick[2].draw(color = "green", label = "Colon cancer")
 # info.nSick[3].draw(color = "blue", label = "Stomach cancer")
 # info.nSick[4].draw(color = "cyan", label = "Liver cancer")
@@ -213,7 +214,7 @@ for j in xrange(1, info.nCancers+1):
 
 # info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
 
-info.nSick[6].draw(color = "red", label = "Have got cancer last year (per 10k)")
+# info.nSick[6].draw(color = "red", label = "Have got cancer last year (per 10k)")
 
 
 
@@ -233,26 +234,26 @@ info.nSick[6].draw(color = "red", label = "Have got cancer last year (per 10k)")
 
 # info.diagnosTime[6].makeRootHist()
 
-# info.diagnosTime[0].draw(color = "red", label = "Lung cancer")
+info.diagnosTime[0].draw(color = "blue", label = "Lung cancer")
 # info.diagnosTime[1].draw(color = "green", label = "Colon cancer")
 # info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
 # info.diagnosTime[3].draw(color = "cyan", label = "Liver cancer")
 # info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
 # info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
 
-info.diagnosTime[5].draw(color = "blue", label = "Have detected cancer last year (per 10k)")
+# info.diagnosTime[5].draw(color = "blue", label = "Have detected cancer last year (per 10k)")
 
 
 
 
-# info.nSurvival[0].draw(color = "red", label = "Lung cancer")
+info.nSurvival[0].draw(color = "green", label = "Lung cancer")
 # info.nSurvival[1].draw(color = "green", label = "Colon cancer")
 # info.nSurvival[2].draw(color = "blue", label = "Stomach cancer")
 # info.nSurvival[3].draw(color = "cyan", label = "Liver cancer")
 # info.nSurvival[4].draw(color = "magenta", label = "Bladder cancer")
 # info.nSurvival[5].draw(color = "black", label = "Total (per 10k)")
 
-info.nSurvival[5].draw(color = "green", label = "Healed last year (per 10k)")
+# info.nSurvival[5].draw(color = "green", label = "Healed last year (per 10k)")
 
 
 # z = [[info.diagnosTime[i][j]/y[i][j] for i in xrange(1,6)] for j in xrange(0,y.nBins)]:
