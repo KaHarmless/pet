@@ -14,7 +14,7 @@ import copy as cp
 
                        ##########################################
 T = 1                  # T means period of PET (once a T years) #        
-MODE = 1               # PET impact:    0 - only background    ,#
+MODE = 0               # PET impact:    0 - only background    ,#
                        # (MODE)         1 - background + pet    #
 nPeople = 10**5        ##########################################
 
