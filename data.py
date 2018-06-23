@@ -7,7 +7,7 @@ class data(object):
 
 	# all_solid lungs, colon, stomach, liver, bladder
 
-	expDur = 210
+	expDur = 100
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
 	betam = [22., 2.3, 3.2, 4.9, 2.2, 1.2]
@@ -20,15 +20,6 @@ class data(object):
 
 	agesUnderRad = [0 for i in xrange(0, 200)]
 
-	
-
-
-	# probDeathCancer = [ [0.01, 0.1, 0.3, 0.8],
-	#                     [0.01, 0.1, 0.3, 0.8],
-	#                     [0.01, 0.1, 0.3, 0.8],
-	#                     [0.01, 0.1, 0.3, 0.8],
-	#                     [0.01, 0.1, 0.3, 0.8],
-	#                     [0.01, 0.1, 0.3, 0.8] ]
 
 	probDetect = 	  [ [ 0.,  0.,  0. ],   # all_solid 
 	                    [96., 88. , 94.],   # lungs, 
@@ -74,7 +65,7 @@ class data(object):
 		self.baselineRisk = [[0 for i in xrange(0, 100)] for j in xrange(0, self.nCancers+1)]
 		self.canProbs = [[[] for age in xrange(0, 150)] for start in xrange(0,150)]
 
-
+		self.initialCan = [[0 for i in xrange(0, self.nCancers+1)] for j in xrange(0, 100)]
 
 		self.canStage =[[h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,3)] for i in xrange(1, self.nCancers+2) ]
 		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+1) ]
@@ -175,7 +166,7 @@ class data(object):
 			eStar = (aae - self.L - 30)/10   
 
 		for iCan in xrange(0, self.nCancers):
-			if age < 20:
+			if age < 20 + self.L:
 				ear.append(0)
 			else:	
 				exponent = math.exp(self.getGamma(iCan) * eStar)
@@ -189,22 +180,22 @@ class data(object):
 
 	def generateProbs(self):
 		# file = open("ear.csv","w")
-		for age in xrange(1, 97):
-			currentProb = [self.baselineRisk[i][age-1] for i in xrange(0, self.nCancers)]
-			# currentProb = [0 for i in xrange(0, self.nCancers)]
-			if age < 25:
-				self.canProbs[age] = currentProb
-				continue
+		for start in xrange(0,150):
+			for age in xrange(1, 97):
+				currentProb = [self.baselineRisk[i][age-1] for i in xrange(0, self.nCancers)]
+				# currentProb = [0 for i in xrange(0, self.nCancers)]
+				# if age < 25:
+				# 	self.canProbs[start][age] = currentProb
 
-			for ageAtExposure in xrange(1,age):
-				if self.agesUnderRad[ageAtExposure-1] == 0:
-					continue
-				currEAR = self.generateEAR(self.petDose, age, ageAtExposure)
-				for canType in xrange(0, self.nCancers):
-					currentProb[canType] += currEAR[canType]
-			# file.write(str(age)+','+str(currentProb)+'\n')
-			self.canProbs[age] = currentProb
-		# file.close()
+				for ageAtExposure in xrange(start,age):
+					if self.agesUnderRad[ageAtExposure-1] == 0:
+						continue
+					currEAR = self.generateEAR(self.petDose, age, ageAtExposure)
+					for canType in xrange(0, self.nCancers):
+						currentProb[canType] += currEAR[canType]
+				# file.write(str(age)+','+str(currentProb)+'\n')
+				self.canProbs[start][age] = currentProb
+			# file.close()
 		return
 ########################################################################
 
@@ -226,6 +217,7 @@ class data(object):
 				if words[0] == 'age':
 					continue
 				self.baselineRisk[canId][int(words[0]) - 1] = float(words[2]) / float(words[3])
+				self.initialCan[int(words[0]) - 1][canId] = float(words[5])
 				if canId == 0:
 					self.probDeath[int(words[0]) -1] = float(words[1])*1000.
 				words = []

@@ -56,7 +56,7 @@ class person(object):
 
 	def diagnostics(self):
 		for i in self.cancers:
-			if i.stage == 0 or i.isFound or self.index == 1:
+			if i.stage == 0 or i.isFound:
 				continue
 			dice = random.random()
 			if dice < (self.info.probDetect[i.cancerType][i.stage - 1]/100.):
@@ -74,26 +74,16 @@ class person(object):
 			
 		# self.generateProb()  ################# temp
 		if self.age < 96:
-			self.cancerProb = self.info.canProbs[self.age]
+			self.cancerProb = self.info.canProbs[self.startAge-1][self.age]
 		else:
-			self.cancerProb = self.info.canProbs[95]
+			self.cancerProb = self.info.canProbs[self.startAge-1][95]
 		# print self.cancerProb
-		
-
-		if self.index == 1:
-			self.cancerProb = []
-			if self.age < 96:
-				for i in xrange(0, self.info.nCancers+1):
-					self.cancerProb.append(self.info.baselineRisk[i][self.age-1])
-			else:
-				for i in xrange(0, self.info.nCancers+1):
-					self.cancerProb.append(self.info.baselineRisk[i][95])
-
 
 		for iCan in xrange(1, self.info.nCancers):
 			dice = random.random()   # get random value
 			if dice < self.cancerProb[iCan]:
 				self.makeCancer(iCan)
+				self.info.nSick[iCan].fill(self.date)
 
 
 	def canTreat(self):
@@ -154,7 +144,22 @@ class person(object):
 		self.cancers.append(cp.copy(newCancer))
 		newCancer = None
 		self.ageGetCancer.append(self.age)
-		self.info.nSick[i].fill(self.date)
+
+		
+
+
+	def initCancer(self):
+		if self.age < 96:
+			self.cancerProb = self.info.initialCan[self.age]
+		else:
+			self.cancerProb = self.info.initialCan[95]
+
+
+		for iCan in xrange(1, self.info.nCancers):
+			dice = random.random()   # get random value
+			if dice < self.cancerProb[iCan]:
+				self.makeCancer(iCan)
+
 
 
 

@@ -33,6 +33,7 @@ for i in range(0,nPeople):
 	# newPerson.age = person.ageDistribution()
 	if newPerson.age > 20:
 		newPerson.index = 1
+	newPerson.initCancer()
 	# newPerson.startAge = person.ageDistribution()
 	people.append(cp.copy(newPerson))  #initial group of people
 
@@ -113,13 +114,13 @@ for j in xrange(1,expDur + 1):
 	if len(people) < 1 :
 		nFolk = 0
 		break
-	
+	# print nFolk, info.genBirth(nFolk)
 
 	# for j in xrange(0, people[0].info.genBirth(len(people))):  # do the loop as much times as a number of people to born
 	for k in xrange(0, info.genBirth(nFolk)):
 		tempPer = person.person()           #  create new temporary person
 		tempPer.age = 1                     # set his age to 0 
-		tempPer.startAge = j                 # and starting age too
+		tempPer.startAge = 1                
 		tempPer.probDeath = info.getProbDeath(tempPer.age)
 
 		tempPer.info = info ################## temp
