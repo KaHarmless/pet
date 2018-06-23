@@ -72,7 +72,7 @@ class data(object):
 		self.ifBckg = baselineFlag
 
 		self.baselineRisk = [[0 for i in xrange(0, 100)] for j in xrange(0, self.nCancers+1)]
-		self.canProbs = [[] for i in xrange(0, 150)]
+		self.canProbs = [[[] for age in xrange(0, 150)] for start in xrange(0,150)]
 
 
 
