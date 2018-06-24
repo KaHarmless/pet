@@ -83,7 +83,7 @@ class person(object):
 			dice = random.random()   # get random value
 			if dice < self.cancerProb[iCan]:
 				self.makeCancer(iCan)
-				# if self.age >= 70:
+				# if self.age >= 70:                        # 70+ CUTOFF
 				# 	continue
 				self.info.nSick[iCan].fill(self.date)
 

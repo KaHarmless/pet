@@ -52,7 +52,7 @@ class data(object):
 
 
 	probDeath = [0 for i in xrange(0,100)]
-	nbirth =  12.2 
+	nbirth =  12.5 * 0.51		  # 51% of born are males 
 
 	                              # number of birth per 1000
 
