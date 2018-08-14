@@ -203,3 +203,15 @@ class histo(object):
 			# self.appendPoint(x[i]+step/2., y[i])
 
 		self.wasHistogramed = True
+
+
+	def avLast(self, num):
+		sum = 0.
+		iLast = self.nBins - 1 
+		while self.y[iLast] == 0:
+			iLast -= 1
+		for i in xrange(0,num):
+			sum += self.y[iLast - i]
+		return sum / num
+
+

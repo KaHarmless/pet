@@ -7,7 +7,7 @@ class data(object):
 
 	# all_solid lungs, colon, stomach, liver, bladder
 
-	expDur = 100
+	expDur = 80
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
 	betam = [22., 2.3, 3.2, 4.9, 2.2, 1.2]
