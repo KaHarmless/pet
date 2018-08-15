@@ -7,6 +7,11 @@ import histo as h
 import random as rnd
 import copy as cp
 
+import ROOT as r
+from array import array
+
+
+
 # people
 
 
@@ -19,12 +24,61 @@ MODE = 0               # PET impact:    0 - only background    ,#
 nPeople = 10**5        ##########################################
 
 
+
 print "Experiment for:\t", nPeople, " people"
 print "With period:\t", T, "years"
 print "Mode: \t\t",MODE  
 
+date = array('i', [0])
+age = array('i', [0])
+yearBorn = array('i', [0])
+yearDied = array('i', [0])
+ageDied = array('i', [0])
+ageStartPet = array('i', [0])
+nCan = array('i', [0])
+yearGetCan = array('i', nCan*[0])
+canType = array('i', nCan*[0])
+canStage = array('i', nCan*[0])
+yearDiag = array('i', nCan*[0])
+yearSurv = array('i', nCan*[0])
+
+rootFile = r.TFile ('data.root', 'recreate')
+tree = r.TTree ('T', 'data')
+
+
+tree.Branch ('date', date, "date/I")
+tree.Branch ('age', age, "age/I")
+tree.Branch ('yearBorn', yearBorn, "yearBorn/I")
+tree.Branch ('yearDied', yearDied, "yearDied/I")
+tree.Branch ('ageDied', ageDied, "ageDied/I")
+tree.Branch ('ageStartPet', ageStartPet, "ageStartPet/I")
+tree.Branch ('yearGetCan', yearGetCan, "yearGetCan[nCan]/I")
+tree.Branch ('canType', canType, "canType[nCan]/I")
+tree.Branch ('canStage', canStage, "canStage[nCan]/I")
+tree.Branch ('yearDiag', yearDiag, "yearDiag[nCan]/I")
+tree.Branch ('yearSurv', yearSurv, "yearSurv[nCan]/I")
+
+def addEvent(input):
+	date = input.get("date")
+	age = input.get("age")
+	yearBorn = input.get("yearBorn")
+	yearDied = input.get("yearDied")
+	ageDied = input.get("ageDied")
+	ageStartPet = input.get("ageStartPet")
+	nCan = input.get("nCan")
+	yearGetCan = input.get("yearGetCan")
+	canType = input.get("canType")
+	canStage = input.get("canStage")
+	yearDiag = input.get("yearDiag")
+	yearSurv = input.get("yearSurv")
+
+	tree.Fill()
+
+
+
+
 ############################ initial cohort ##############
-info = data.data(MODE, T) # 
+
 people = []
 for i in range(0,nPeople):
 	newPerson = person.person()

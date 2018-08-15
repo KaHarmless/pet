@@ -2,6 +2,7 @@ import random as rnd
 import math
 import histo as h
 
+
 class data(object):
 
 
@@ -55,6 +56,13 @@ class data(object):
 	nbirth =  12.5 * 0.51		  # 51% of born are males 
 
 	                              # number of birth per 1000
+
+
+
+
+
+
+
 
 	def __init__(self,baselineFlag, period = 1): # baseline flag: 0 - only background, 1 - all together!!!!!!!!!
 		self.period = period

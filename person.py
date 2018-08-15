@@ -4,6 +4,7 @@ import data
 import math
 import histo as h
 import copy as cp
+from array import array
 
 class person(object):
 
@@ -19,15 +20,32 @@ class person(object):
 
 		self.cancers = []
 
+
+
 		self.age = self.generateAge()    # generate age
 		self.startAge = self.age         # save initial age
 
 		self.ageGetCancer = []
 
 		self.badMarker = False
-		# for i in xrange(0,self.startAge):
-		# 	self.dose.append(0)
 
+
+
+
+	def initEventInfo(self):
+		self.eventData = {
+		"date": self.date,
+		"age": self.age,
+		"yearBorn": self.startAge,
+		"yearDied": -999,
+		"ageStartPet": -999,
+		"nCan": 0
+		"yearGetCan": []
+		"canType": []
+		"canStage": []
+		"yearDiag": []
+		"yearSurv": []
+		}
 
 
 	def generateAge(self):
