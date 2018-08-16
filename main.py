@@ -7,6 +7,8 @@ import histo as h
 import random as rnd
 import copy as cp
 
+
+
 # people
 
 
@@ -14,7 +16,7 @@ import copy as cp
 
                        ##########################################
 T = 1                  # T means period of PET (once a T years) #        
-MODE = 0               # PET impact:    0 - only background    ,#
+MODE = 1               # PET impact:    0 - only background    ,#
                        # (MODE)         1 - background + pet    #
 nPeople = 10**5        ##########################################
 
@@ -48,8 +50,6 @@ expDur = info.expDur   ####################
 
 
 
-
-
 x = xrange(0, expDur)
 
 # x = xrange(1, 120)
@@ -68,15 +68,31 @@ Population = []
 # nz = [0 for j in xrange(0,6)]
 
 
-################ main loop by years of experiment ###############
-
 firstSick = False
 firstSickYear = 0
 
+info.updateAgeDistrib(nPeople)
+lastDistr = info.ageDistribFull
+
+nFolk = nPeople
+
+
+################ main loop by years of experiment ###############
+
 for j in xrange(1,expDur + 1):
+	# print len(people)
+	info.updateAgeDistrib(nPeople)
+	# if j != 1:
+	newPeople = data.regPopulation(info, people, lastDistr)
+	people = newPeople
+
+	lastDistr = {i : 0 for i in xrange(1,101)}
 
 	nFolk = len(people)
 	Population.append(nFolk)
+
+
+	# info.updateAgeDistrib(nFolk)
 
 	 # filling hist with numbers of people
 	# N.fill(nFolk)
@@ -98,12 +114,22 @@ for j in xrange(1,expDur + 1):
 			info.nDie.fill(j)
 			continue                    # go to the next person
 
+		lastDistr[i.age + 1] += 1 
+		# print lastDistr[i.age + 1] 
 
 		i.increaseAge()          # increase age of person
 
 		peopleNew.append(i)
-		
+
+	# for key, val in lastDistr.iteritems():
+	# 	print key, val
+
+	lastDistr[1] = 0
+	# lastDistr[100] = 0
+	
 	people = peopleNew
+
+
 	##########################################################################################
 	
 

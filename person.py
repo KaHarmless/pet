@@ -182,7 +182,7 @@ class person(object):
 def ageDistribution():  # generating age of person due to distribution
 	dice = random.random();
 	# return 20
-	if dice < 0.06913 :
+	if dice < 0.055307:
 		return random.randint(1,4)
 	if dice < 0.141667 :
 		return random.randint(5,9)

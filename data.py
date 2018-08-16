@@ -1,6 +1,8 @@
 import random as rnd
 import math
 import histo as h
+import person as p
+import copy as cp 
 
 class data(object):
 
@@ -8,6 +10,8 @@ class data(object):
 	# all_solid lungs, colon, stomach, liver, bladder
 
 	expDur = 100
+	maxPetAge = 80
+	minPetAge = 20
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
 	betam = [22., 2.3, 3.2, 4.9, 2.2, 1.2]
@@ -50,9 +54,13 @@ class data(object):
 
 	L = 5 # Latency
 
+	ageDistrib = dict()
+	ageDistribFull = dict()
+
 
 	probDeath = [0 for i in xrange(0,100)]
-	nbirth =  12.5 * 0.51		  # 51% of born are males 
+	# nbirth =  12.5 * 0.51		  # 51% of born are males 
+	nbirth = 0
 
 	                              # number of birth per 1000
 
@@ -81,13 +89,14 @@ class data(object):
 
 		self.readData()
 		self.generateProbs()
+		self.generateAgeDistrib()
 
 
 
 
 	def initAgesAtPET(self):
 		for age in xrange(1, len(self.agesUnderRad)+1):
-			if age > 20 and age < 70:
+			if age > self.minPetAge and age < self.maxPetAge:
 				if age%self.period == 0:
 					self.agesUnderRad[age-1] = 1
 
@@ -115,9 +124,26 @@ class data(object):
 	def getProbSurvCancer(self, cancerIndex, stage):
 		return self.probSurv[cancerIndex][stage-1]
 
+	def generateAgeDistrib(self):
+		numStat = int(10e5)	
+		self.ageDistrib = dict()
+		for i in xrange(0,numStat):
+			age = p.ageDistribution()
+			# self.ageDistrib.update( { age : self.ageDistrib.get(age, 0) + 1 } )
+			try:
+				self.ageDistrib[age] += 1
+			except KeyError:
+				self.ageDistrib[age] = 1
 
 
+		for key, value in self.ageDistrib.iteritems():
+			self.ageDistrib[key] /= float(numStat)
 
+
+	def updateAgeDistrib(self, num):
+		for key, val in self.ageDistrib.iteritems():
+			self.ageDistribFull[key] = int(val*num)
+			# print key, self.ageDistribFull[key] 
 
 
 	
@@ -135,24 +161,22 @@ class data(object):
 
 
 	def ifDie(self, per):
+		if per.age == 100:
+			return True
+
 		probDie = 0. 
 		for i in per.cancers:     # check is it time to die 
 			if i.stage == 4:
 				return True
 
-		# 	probDie += ( 1. - self.getProbSurvCancer(i.cancerType, i.stage)/100.)
 
-		dice = rnd.random()
-		if per.age <= 96:
-			prob = self.getProbDeath(per.age)     # getting probability
-		else:
-			# prob = self.getProbDeath(96)
-			prob = 400.
+		# dice = rnd.random()
 
-		if dice < (prob/1000. + probDie):          # check probability 
-			return True
-		else:
-			return False 
+
+		# if dice < (probDie):          # check probability 
+		# 	return True
+		# else:
+		# 	return False 
 
 
 
@@ -225,9 +249,35 @@ class data(object):
 
 		
 
+def regPopulation(info, people, lastDistr):
+	peopleNew = []
+	nFolk = len(people)
+	# probRegulate = {1 : info.ageDistribFull[1] / float(nFolk)}
+	probRegulate = dict()
 
+	for i in xrange(1,101):
+		# print i, lastDistr[i], info.ageDistribFull[i]
+		probRegulate[i] = (lastDistr[i] - info.ageDistribFull[i]) 
+		# print i, lastDistr[i], info.ageDistribFull[i], probRegulate[i]
+		if probRegulate[i] < 0.: 
+			for k in xrange(0, - probRegulate[i]):
+				tempPer = p.person()           #  create new temporary person
+				tempPer.age = i                     # set his age to 0 
+				tempPer.startAge = i                
+				tempPer.probDeath = info.getProbDeath(tempPer.age)
 
+				tempPer.info = info ################## temp
+				# info.nBirth.fill(j)
+				peopleNew.append(cp.copy(tempPer)) 
 
-		
+	for j in people:
+		if probRegulate[j.age] > 0.:
+			dice = rnd.random()
+			# print dice, probRegulate[j.age]
+			if dice < probRegulate[j.age] / float(lastDistr[j.age]):
+				continue
 
+		peopleNew.append(j)
+
+	return peopleNew
 
