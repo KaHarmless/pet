@@ -9,10 +9,7 @@ import copy as cp
 
 
 
-# people
 
-
-############################## temp
 
                        ##########################################
 T = 1                  # T means period of PET (once a T years) #        
@@ -25,7 +22,8 @@ print "Experiment for:\t", nPeople, " people"
 print "With period:\t", T, "years"
 print "Mode: \t\t",MODE  
 
-############################ initial cohort ##############
+
+################### Initial cohort creation ######################
 info = data.data(MODE, T) # 
 people = []
 for i in range(0,nPeople):
@@ -40,10 +38,7 @@ for i in range(0,nPeople):
 	people.append(cp.copy(newPerson))  #initial group of people
 
 print ">>> Initial cohort is ready"
-
-##########################################################
-
-
+############# End of initial cohort creation #####################
 
 expDur = info.expDur   ####################
 
@@ -77,8 +72,7 @@ lastDistr = info.ageDistribFull
 nFolk = nPeople
 
 
-################ main loop by years of experiment ###############
-
+################ Main loop by years of experiment ###############
 for j in xrange(1,expDur + 1):
 	# print len(people)
 	info.updateAgeDistrib(nPeople)
@@ -102,7 +96,7 @@ for j in xrange(1,expDur + 1):
 
 
 	
-	###############################################################################
+	################################# Loop by people #################################
 	peopleNew = []
 
 	for i in people:             # loop for each person every year
@@ -110,9 +104,12 @@ for j in xrange(1,expDur + 1):
 
 		N.fill(j)   # age distribution
 
-		if info.ifDie(i):      # getting probability to die and check
+		dyingCond = info.ifDie(i)  # getting probability to die
+		if dyingCond == 2:         # dying by cancer
 			info.nDie.fill(j)
 			continue                    # go to the next person
+		elif dyingCond == 1:       # dying by age
+			continue
 
 		lastDistr[i.age + 1] += 1 
 		# print lastDistr[i.age + 1] 
@@ -121,21 +118,10 @@ for j in xrange(1,expDur + 1):
 
 		peopleNew.append(i)
 
-	# for key, val in lastDistr.iteritems():
-	# 	print key, val
-
 	lastDistr[1] = 0
-	# lastDistr[100] = 0
-	
 	people = peopleNew
-
-
-	##########################################################################################
+	################################ End of loop by people ###############################
 	
-
-
-
-
 
 	if len(people) < 1 :
 		nFolk = 0
@@ -152,17 +138,11 @@ for j in xrange(1,expDur + 1):
 		tempPer.info = info ################## temp
 		info.nBirth.fill(j)
 		people.append(cp.copy(tempPer))              # add out temporary man to the list
+############################ End of loop by years #################################
 
-#####################################################################
 
-# N.makeRegHist()
-# info.nDie.makeRegHist()
-# info.nBirth.makeRegHist()
 
-# N.draw(color = 'red', label = "Population over time")
-# nDie.draw(rootLike = True, color = 'blue', label = "Dying per year")
-# N.draw(normalized = True)
-
+########### Adding histos for total full-body data ####
 info.diagnosTime[5].makeZero()
 info.nSick[6].makeZero()
 
@@ -172,10 +152,10 @@ for k in xrange(1, 6):
 
 for k in xrange(0, 5):
 	info.diagnosTime[5].histAdd(info.diagnosTime[k])
+################## End of histo adding ################ 
 
-
-
-
+##################### Histogram processing ##############
+info.nDie.makeRegHist()
 
 for i in xrange(1, info.nCancers+1):
 	y[i].makeRegHist()
@@ -189,7 +169,15 @@ for i in xrange(0, info.nCancers):
 for j in info.canStage:
 	for k in j:
 		k.makeRegHist()
+############ End of histogram processing ##################
 
+
+############### Normalization per 10k of population ######
+# for i in xrange(firstSickYear, y[1].nBins):
+
+for i in xrange(firstSickYear, info.nDie.nBins):
+	g = info.nDie.getBinContent(i) / Population[i-firstSickYear] * 10000.
+	info.nDie.setBinContent(i, g)
 
 # print len(y[6].x), len(y[6].y)
 for j in xrange(1, info.nCancers+1):
@@ -214,99 +202,13 @@ for j in xrange(1, info.nCancers+1):
 		except IndexError:
 			print "whoops..."
 			continue
-
-		# info.nSick[6].x = cp.copy(x)
-		# info.nSick[6].generateData()
-		# info.nSick[6].makeZero()
-		# info.nSick[6].makeRootHist()
-		# info.diagnosTime[5].x = cp.copy(x)
-		# info.diagnosTime[5].generateData()
-		# info.diagnosTime[5].makeZero()
-		# info.diagnosTime[5].makeRootHist()
+########## End of histogram normalization ###################
 
 
+# info.nSick[1].draw(color = "red", label = "Lung cancer")
 
-
-
-		
-
-
-
-
-info.nSick[1].draw(color = "red", label = "Lung cancer")
-# info.nSick[2].draw(color = "green", label = "Colon cancer")
-# info.nSick[3].draw(color = "blue", label = "Stomach cancer")
-# info.nSick[4].draw(color = "cyan", label = "Liver cancer")
-# info.nSick[5].draw(color = "magenta", label = "Bladder cancer")
-
-# info.nSick[6].draw(color = "black", label = "Have got cancer last year (per 10k)")
-
-# info.nSick[6].draw(color = "red", label = "Have got cancer last year (per 10k)")
-
-
-
-
-# info.canStage[6][0].draw(color = "red", label = "First stage")
-# info.canStage[6][1].draw(color = "green", label = "Second stage")
-# info.canStage[6][2].draw(color = "blue", label = "Third stage")
-# info.canStage[3].draw(color = "cyan", label = "Liver cancer")
-# info.canStage[4].draw(color = "magenta", label = "Bladder cancer")
-# info.canStage[5].draw(color = "black", label = "Sum")
-
-
-
-
-# for i in xrange(0, info.nCancers-1):
-# 	info.diagnosTime[i].makeRootHist()
-
-# info.diagnosTime[6].makeRootHist()
-
-info.diagnosTime[0].draw(color = "blue", label = "Lung cancer")
-# info.diagnosTime[1].draw(color = "green", label = "Colon cancer")
-# info.diagnosTime[2].draw(color = "blue", label = "Stomach cancer")
-# info.diagnosTime[3].draw(color = "cyan", label = "Liver cancer")
-# info.diagnosTime[4].draw(color = "magenta", label = "Bladder cancer")
-# info.diagnosTime[5].draw(color = "red", label = "Have detected cancer last year (per 10k)")
-
-# info.diagnosTime[5].draw(color = "blue", label = "Have detected cancer last year (per 10k)")
-
-
-
-
-info.nSurvival[0].draw(color = "green", label = "Lung cancer")
-# info.nSurvival[1].draw(color = "green", label = "Colon cancer")
-# info.nSurvival[2].draw(color = "blue", label = "Stomach cancer")
-# info.nSurvival[3].draw(color = "cyan", label = "Liver cancer")
-# info.nSurvival[4].draw(color = "magenta", label = "Bladder cancer")
-# info.nSurvival[5].draw(color = "black", label = "Total (per 10k)")
-
-# info.nSurvival[5].draw(color = "green", label = "Healed last year (per 10k)")
-
-
-# z = [[info.diagnosTime[i][j]/y[i][j] for i in xrange(1,6)] for j in xrange(0,y.nBins)]:
-
-
-# zh = [h.histo(210, -0.5, 210 - 0.5) for i in xrange(1, info.nCancers+1)]
-
-# for i in xrange(1,5):
-# 	for j in xrange(0,y[1].nBins):
-# 		if (y[i].y[j] == 0):
-# 			continue
-# 		zh[i].y.append(info.diagnosTime[i].y[j]/y[i].y[j])
-# 		zh[i].x.append(y[i].x[j])
-
-
-
- 
-
-
-# zh[1].draw(color = "red", label = "Lung cancer (N diased / N sick)")
-# zh[2].draw(color = "green", label = "Colon cancer (N diased / N sick)")
-# zh[3].draw(color = "blue", label = "Stomach cancer (N diased / N sick)")
-# zh[4].draw(color = "cyan", label = "Liver cancer (N diased / N sick)")
-# zh[5].draw(color = "magenta", label = "Bladder cancer (N diased / N sick)")
-
-
+############################# Exporting to files #################################
+print "Exporting results to files...\n"
 
 sickOutput = open("gotSickPY.csv","w")
 sickOutput.write("age,lungs,colon,stomach,liver,bladder,sum\n")
@@ -354,10 +256,18 @@ for i in xrange(0,len(x)):
 stageOutput.close()
 
 
+deathRateFile = open("deathRatePY.csv","w")
+deathRateFile.write('year, rate\n')
+for i in xrange(0,len(x)):
+	msg = str(x[i]) + ',' + str(info.nDie.y[i]) + ',\n'
+	deathRateFile.write(msg)
+deathRateFile.close()
+########################## End of file export ################################
+
 
 # self.info.canStage[i.cancerType-1].fill(i.stage)
 
 
-h.finish()
+# h.finish()
 
 

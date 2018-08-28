@@ -160,14 +160,16 @@ class data(object):
 
 
 
-	def ifDie(self, per):
-		if per.age == 100:
-			return True
+	def ifDie(self, per):        # 0 for staying alive
+		if per.age == 100:       # 1 for dying by age
+			return 1			 # 2 for dying by cancer
 
 		probDie = 0. 
 		for i in per.cancers:     # check is it time to die 
 			if i.stage == 4:
-				return True
+				return 2
+
+		return 0 
 
 
 		# dice = rnd.random()
