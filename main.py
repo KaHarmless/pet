@@ -13,10 +13,15 @@ import copy as cp
 
                        ##########################################
 T = 1                  # T means period of PET (once a T years) #        
-MODE = 1               # PET impact:    0 - only background    ,#
+MODE = 0               # PET impact:    0 - only background    ,#
                        # (MODE)         1 - background + pet    #
-nPeople = 10**5        ##########################################
+				       ##########################################
 
+info = data.data(MODE, T) # 
+
+					   ################################
+nPeople = info.nPeople # NUMBER OF PEOPLE SET IN DATA #
+					   ################################
 
 print "Experiment for:\t", nPeople, " people"
 print "With period:\t", T, "years"
@@ -24,7 +29,7 @@ print "Mode: \t\t",MODE
 
 
 ################### Initial cohort creation ######################
-info = data.data(MODE, T) # 
+
 people = []
 for i in range(0,nPeople):
 	newPerson = person.person()
@@ -106,7 +111,8 @@ for j in xrange(1,expDur + 1):
 
 		dyingCond = info.ifDie(i)  # getting probability to die
 		if dyingCond == 2:         # dying by cancer
-			info.nDie.fill(j)
+			if i.age >= info.minPetAge and i.age <= info.maxPetAge:
+				info.nDie.fill(j)
 			continue                    # go to the next person
 		elif dyingCond == 1:       # dying by age
 			continue

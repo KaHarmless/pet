@@ -10,8 +10,12 @@ class data(object):
 	# all_solid lungs, colon, stomach, liver, bladder
 
 	expDur = 100
+	nPeople = 10**6
+
 	maxPetAge = 80
 	minPetAge = 20
+
+	
 	nCancers = 6
 	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
 	betam = [22., 2.3, 3.2, 4.9, 2.2, 1.2]
@@ -125,7 +129,7 @@ class data(object):
 		return self.probSurv[cancerIndex][stage-1]
 
 	def generateAgeDistrib(self):
-		numStat = int(10e5)	
+		numStat = int(self.nPeople)	
 		self.ageDistrib = dict()
 		for i in xrange(0,numStat):
 			age = p.ageDistribution()
@@ -269,6 +273,9 @@ def regPopulation(info, people, lastDistr):
 				tempPer.probDeath = info.getProbDeath(tempPer.age)
 
 				tempPer.info = info ################## temp
+
+				tempPer.initCancer()
+				
 				# info.nBirth.fill(j)
 				peopleNew.append(cp.copy(tempPer)) 
 
