@@ -9,15 +9,15 @@ class data(object):
 
 	# all_solid lungs, colon, stomach, liver, bladder
 
-	expDur = 100
-	nPeople = 10**6
+	expDur = 80
+	nPeople = 10**4
 
 	maxPetAge = 80
 	minPetAge = 20
 
 	
 	nCancers = 6
-	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder"]
+	cancerName = ["all_solid","lungs", "colon", "stomach", "liver", "bladder", "sum"]
 	betam = [22., 2.3, 3.2, 4.9, 2.2, 1.2]
 	eta = [2.8, 5.2, 2.8, 2.8, 4.1, 6.]      
 	gamma = [-4.1, -4,1, -4,1, -4,1, -4,1, -4,1]
@@ -79,10 +79,10 @@ class data(object):
 
 		self.initialCan = [[0 for i in xrange(0, self.nCancers+1)] for j in xrange(0, 100)]
 
-		self.canStage =[[h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,3)] for i in xrange(1, self.nCancers+2) ]
-		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+1) ]
-		self.nSick = [h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,self.nCancers+1)]
-		self.nSurvival =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(1, self.nCancers+1) ]
+		self.canStage =[[h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,3)] for i in xrange(0, self.nCancers+2) ]
+		self.diagnosTime =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(0, self.nCancers+2) ]
+		self.nSick = [h.histo(self.expDur, -0.5, self.expDur-0.5) for j in xrange(0,self.nCancers+2)]
+		self.nSurvival =[h.histo(self.expDur, -0.5, self.expDur - 0.5) for i in xrange(0, self.nCancers+2) ]
 
 
 		self.nDie = h.histo(self.expDur, - 0.5, self.expDur - 0.5)

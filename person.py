@@ -65,14 +65,14 @@ class person(object):
 				i.ageFound = self.age
 				# self.info.canStage[self.date][i.cancerType-1].fill(i.stage-1)
 				if self.age >= self.info.minPetAge and self.age <= self.info.maxPetAge:
-					self.info.diagnosTime[i.cancerType-1].fill(self.date)
+					self.info.diagnosTime[i.cancerType].fill(self.date)
 				# self.info.canStage[i.cancerType-1].fill(i.stage-1)
 
 
 
 	def isGettingCancer(self):
-		if self.age < 20:            # no cancer under 20 
-			return
+		# if self.age < 20:            # no cancer under 20 
+			# return
 			
 		# self.generateProb()  ################# temp
 		if self.age < 96:
@@ -86,7 +86,7 @@ class person(object):
 			if dice < self.cancerProb[iCan]:
 				self.makeCancer(iCan)
 				# if self.age >= 70:                        # 70+ CUTOFF
-				# 	continue
+					# continue
 				if self.age >= self.info.minPetAge and self.age <= self.info.maxPetAge:
 					self.info.nSick[iCan].fill(self.date)
 
@@ -101,8 +101,8 @@ class person(object):
 					newCancerList.append(i)
 				else:
 					if self.age >= self.info.minPetAge and self.age <= self.info.maxPetAge:
-						self.info.nSurvival[i.cancerType-1].fill(self.date)
-						self.info.nSurvival[5].fill(self.date)
+						self.info.nSurvival[i.cancerType].fill(self.date)
+						self.info.nSurvival[6].fill(self.date)
 			else:
 				newCancerList.append(i)
 		self.cancers = None
