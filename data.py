@@ -10,10 +10,11 @@ class data(object):
 	# all_solid lungs, colon, stomach, liver, bladder
 
 	expDur = 80
-	nPeople = 10**4
+	nPeople = 10**5
 
-	maxPetAge = 80
+
 	minPetAge = 20
+	maxPetAge = 80
 
 	
 	nCancers = 6
@@ -32,9 +33,9 @@ class data(object):
 	probDetect = 	  [ [ 0.,  0.,  0. ],   # all_solid 
 	                    [96., 88. , 94.],   # lungs, 
 	                    [95., 29.,  78.],   # colon, 
-	                    [47., 34. , 50.],   # stomach,
+	                    [50., 60. , 65.],   # stomach,
 	                    [82., 63.,  21.],   # liver, 
-	                    [60., 85., 100.] ]  # bladder
+	                    [45., 45.,  50.] ]  # bladder
 	      
 
 
@@ -47,14 +48,15 @@ class data(object):
 	#                     [89.20,  71.17, 29.81] ]  # bladder
 
 	# five years survival
-	probSurv =        [ [100.,  100.,   100.],    # all_solid  
-	                    [56.3, 29.7, 4.7],    # lungs, 
-	                    [89.8, 72.1, 13.8],    # colon, 
-	                    [68.1, 30.6, 5.2],   # stomach,
-	                    [31.3,  10.6, 2.4],   # liver, 
-	                    [69.4,  34.9, 4.8] ]  # bladder
+	probSurv =        [ [100.,  100.,   100.],  	# all_solid  
+	                    [92., 68., 36.],    		# lungs, 
+	                    [89.8, 72.1, 13.8],    		# colon, 
+	                    [94., 82., 54.],   			# stomach,
+	                    [31.3,  10.6, 2.4],   		# liver, 
+	                    [96.,  70., 35.] ]  		# bladder
 
 
+	baselineRegCoeff = 0.58		# coefficient for baseline risk gauge
 
 	L = 5 # Latency
 
@@ -91,9 +93,12 @@ class data(object):
 
 		# self.canStage = [[h.histo(6, 0, 6) for i in xrange(0,self.nCancers+1)] for j in xrange(1, self.expDur+2)]
 
+		
 		self.readData()
+		self.regBaselineRisk()
 		self.generateProbs()
 		self.generateAgeDistrib()
+
 
 
 
@@ -253,6 +258,10 @@ class data(object):
 				words = []
 		return
 
+
+	def regBaselineRisk(self):
+		baselineRiskNew = [[i*self.baselineRegCoeff for i in j] for j in self.baselineRisk]
+		self.baselineRisk = baselineRiskNew
 		
 
 def regPopulation(info, people, lastDistr):
@@ -289,4 +298,6 @@ def regPopulation(info, people, lastDistr):
 		peopleNew.append(j)
 
 	return peopleNew
+
+
 

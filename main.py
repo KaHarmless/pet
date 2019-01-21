@@ -1,23 +1,33 @@
 #!/usr/bin/python
 
+
+# libs
 import matplotlib.pyplot as plt
-import person
-import data
 import histo as h
 import random as rnd
 import copy as cp
-
+import thread 
+import multiprocessing as mp
 import ROOT as r
+import time as t
+
+# my modules
+import person
+import data
 
 
 
 
 
-                       ##########################################
-T = 1                  # T means period of PET (once a T years) #        
-MODE = 0               # PET impact:    0 - only background    ,#
-                       # (MODE)         1 - background + pet    #
-				       ##########################################
+                       	##########################################
+T = 1                  	# T means period of PET (once a T years) #        
+MODE = 0               	# PET impact:    0 - only background    ,#
+                       	# (MODE)         1 - background + pet    #
+				    	##########################################
+
+				    	####################
+MTMODE = True			# Multithread mode #
+						####################
 
 info = data.data(MODE, T) # 
 
@@ -32,8 +42,13 @@ nAveraged = 10         # Number of last years taken into account  #
 					   ############################################
 
 					   ########################
-nTry = 20			   # Number of iterations #
+nTry = 24			   # Number of iterations #
 					   ########################
+
+
+					   #####################
+nThreads = 6		   # Number of threads #
+					   #####################
 
 
 
@@ -44,6 +59,8 @@ print "Mode: \t\t",MODE
 
 
 file = r.TFile("histos.root", "RECREATE")
+
+
 
 
 NBINS = 200
@@ -61,6 +78,10 @@ hSurv = [r.TH1D("survived_" + info.cancerName[i],\
 for i in xrange(0,info.nCancers+1)]
 
 hDead = r.TH1D("dead", "dead", NBINS, 0, 50) 
+
+global nAllreadyCalled
+nAllreadyCalled = 0
+startTime = t.time()
 
 
 def calculate():
@@ -245,18 +266,69 @@ def calculate():
 	########## End of histogram normalization ###################
 
 
+	# retForHist = 
+
+	# hSick,hDetected,hSurv,hDead = histos
+
+	# for i in xrange(1 ,info.nCancers + 1):
+	# 	hSick[i].Fill(info.nSick[i].avLast(nAveraged))
+	# 	hDetected[i].Fill(info.diagnosTime[i].avLast(nAveraged))
+	# 	hSurv[i].Fill(info.nSurvival[i].avLast(nAveraged))
+
+	# for j in xrange(0,4):
+
+	# hDead.Fill(info.nDie.avLast(nAveraged))
+
+
+	ansv = [[] for i in xrange(0, info.nCancers + 2)]
+
 	for i in xrange(1 ,info.nCancers + 1):
-		hSick[i].Fill(info.nSick[i].avLast(nAveraged))
-		hDetected[i].Fill(info.diagnosTime[i].avLast(nAveraged))
-		hSurv[i].Fill(info.nSurvival[i].avLast(nAveraged))
-
-	hDead.Fill(info.nDie.avLast(nAveraged))
-
-	return
+		ansv[i].append(info.nSick[i].avLast(nAveraged))
+		ansv[i].append(info.diagnosTime[i].avLast(nAveraged))
+		ansv[i].append(info.nSurvival[i].avLast(nAveraged))
+	ansv[-1].append(info.nDie.avLast(nAveraged))
 
 
-for tries in xrange(0, nTry):
-	calculate()
+	# counter.value += 1
+
+	return ansv
+
+
+
+def MTcalculate(processID):
+	ansv = []
+	for i in xrange(0, int(nTry/nThreads)):
+		ansv.append(calculate())
+	return ansv
+
+
+finishTime = 0
+
+if MTMODE:
+	# counter = mp.Value('i', 0)
+	pool = mp.Pool(processes = nThreads+1)
+	result = pool.map(MTcalculate, range(nThreads))
+
+	for proc in result:
+		for iterr in proc:
+			for i in xrange(1 ,info.nCancers + 1):
+				hSick[i].Fill(iterr[i][0])
+				hDetected[i].Fill(iterr[i][1])
+				hSurv[i].Fill(iterr[i][2])
+			hDead.Fill(iterr[-1][0])
+
+	while len(result) != nThreads:
+		pass
+
+else:
+	for tries in xrange(0, nTry):
+		calculate()
+
+finishTime = t.time()
+
+print "Execution time = ", finishTime - startTime, " s"
+
+# hSick,hDetected,hSurv,hDead = histos
 
 for h in hSick:
 	h.Write()

@@ -87,8 +87,8 @@ class person(object):
 				self.makeCancer(iCan)
 				# if self.age >= 70:                        # 70+ CUTOFF
 					# continue
-				if self.age >= self.info.minPetAge and self.age <= self.info.maxPetAge:
-					self.info.nSick[iCan].fill(self.date)
+				# if self.age >= self.info.minPetAge and self.age <= self.info.maxPetAge:
+				self.info.nSick[iCan].fill(self.date)
 
 
 	def canTreat(self):
